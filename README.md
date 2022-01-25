@@ -11,11 +11,11 @@ Initial Features:
 - Add a kanban
 - Add a task
 - Assign task to a column
-- Add a comment
 
 Extra Features:
 
 - Add subtasks
+- Add a comment
 - Add subcomments
 - Add tags
 
