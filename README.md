@@ -2,9 +2,15 @@
 
 ## Project Overview
 
+Todo
+
 ## Functionality
 
+Todo
+
 ## Data Model
+
+Todo
 
 ## Schedule
 
