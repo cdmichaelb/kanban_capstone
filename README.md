@@ -1,8 +1,8 @@
-# kanban_capstone
+# Kanban Capstone
 
 ## Project Overview
 
-Todo
+An advanced Kanban task organizer. Capstone Project for PDX Code Guild Class Raven.
 
 ## Functionality
 
@@ -10,13 +10,14 @@ Initial Features:
 
 - Add a kanban
 - Add a task
+- Assign task to a column
 - Add a comment
 
 Extra Features:
 
 - Add subtasks
-- add subcomments
-- tags
+- Add subcomments
+- Add tags
 
 ## Data Model
 
