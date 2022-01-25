@@ -20,7 +20,7 @@ Extra Features:
 
 ## Data Model
 
-Todo -- attach image
+![Data Model](images/Kanban%20Captstone%20Diagram.drawio.svg)
 
 ## Schedule
 
