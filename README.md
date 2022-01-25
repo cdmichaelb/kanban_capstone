@@ -6,11 +6,21 @@ Todo
 
 ## Functionality
 
-Todo
+Initial Features:
+
+- Add a kanban
+- Add a task
+- Add a comment
+
+Extra Features:
+
+- Add subtasks
+- add subcomments
+- tags
 
 ## Data Model
 
-Todo
+Todo -- attach image
 
 ## Schedule
 
@@ -20,11 +30,11 @@ Database structuring and model creation.
 
 ### Week 2
 
-Django Back end including json serialization
+Django back-end including json serialization
 
 ### Week 3
 
-Front End vue or java script but preferably vue.
+Front-end vue or java script but preferably vue.
 
 ### Week 4
 
