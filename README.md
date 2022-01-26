@@ -19,6 +19,7 @@ Extra Features:
 - Add subcomments
 - Add tags
 - Implement GSap Library <https://greensock.com/draggable/>
+- Implement Progressive Web Apps <https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps>
 
 ## Data Model
 
