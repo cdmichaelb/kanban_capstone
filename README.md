@@ -11,6 +11,7 @@ Initial Features:
 - Add a kanban
 - Add a task
 - Assign task to a column
+- Custom Columns defined by User
 
 Extra Features:
 
