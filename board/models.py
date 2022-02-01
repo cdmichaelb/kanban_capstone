@@ -10,20 +10,10 @@ class Kanban(models.Model):
         ordering = ('-created_at',)
     def __str__(self):
         return self.name
-    
-class Tasks(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    priority = models.CharField(max_length=255)
-    kanban = models.ForeignKey(Kanban, on_delete=models.CASCADE)
-    class Meta:
-        ordering = ('-created_at',)
-    def __str__(self):
-        return self.name
-    
-class Columns(models.Model):
+
+# TODO: Add Priority Model - Name - fk
+
+class Column(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -33,24 +23,37 @@ class Columns(models.Model):
         ordering = ('-created_at',)
     def __str__(self):
         return self.name
-    
-class Notes(models.Model):
+class Task(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    task = models.ForeignKey(Tasks, on_delete=models.CASCADE)
+    #priority = models.ForeignKey(PriorityModel) #, on_delete=models.CASCADE)
+    kanban = models.ForeignKey(Column, on_delete=models.CASCADE)
     class Meta:
         ordering = ('-created_at',)
     def __str__(self):
         return self.name
     
-class Tags(models.Model):
+# TODO: Possibly create new apps for notes and tags
+
+class Note(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    task = models.ForeignKey(Tasks, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    class Meta:
+        ordering = ('-created_at',)
+    def __str__(self):
+        return self.name
+    
+class Tag(models.Model):
+    name = models.CharField(max_length=255)
+    description = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
     class Meta:
         ordering = ('-created_at',)
     def __str__(self):
@@ -72,7 +75,7 @@ class CustomUser(models.Model):
     def __str__(self):
         return self.username
 
-class Board(models.Model):
+""" class Board(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -82,7 +85,6 @@ class Board(models.Model):
         ordering = ('-created_at',)
     def __str__(self):
         return self.name
-    
 class Column(models.Model):
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
@@ -103,4 +105,4 @@ class Card(models.Model):
     class Meta:
         ordering = ('-created_at',)
     def __str__(self):
-        return self.name
+        return self.name """

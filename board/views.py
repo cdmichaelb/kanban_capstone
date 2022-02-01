@@ -8,19 +8,19 @@ class KanbanViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.ModelSerializer
 
 class TasksViewSet(viewsets.ModelViewSet):
-    queryset = Tasks.objects.all()
+    queryset = Task.objects.all()
     serializer_class = serializers.ModelSerializer
     
 class ColumnsViewSet(viewsets.ModelViewSet):
-    queryset = Columns.objects.all()
+    queryset = Column.objects.all()
     serializer_class = serializers.ModelSerializer
     
 class NotesViewSet(viewsets.ModelViewSet):
-    queryset = Notes.objects.all()
+    queryset = Note.objects.all()
     serializer_class = serializers.ModelSerializer
     
 class TagsViewSet(viewsets.ModelViewSet):
-    queryset = Tags.objects.all()
+    queryset = Tag.objects.all()
     serializer_class = serializers.ModelSerializer
     
 class CustomUserViewSet(viewsets.ModelViewSet):
