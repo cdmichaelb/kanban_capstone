@@ -1,11 +1,15 @@
 from django.shortcuts import render, reverse
 from django.http import HttpResponseRedirect
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import viewsets, serializers
 from django.contrib.auth import (
     authenticate,
     login as django_login,
     logout as django_logout
 )
 from users.models import CustomUser
+from .serializers import *
 
 def register(request):
     if request.method == 'GET':
@@ -54,7 +58,7 @@ def logout(request):
     django_logout(request)
     return HttpResponseRedirect(reverse('board:index'))
 
-def account(request):
+""" def account(request):
     if request.method == 'GET':
         return render(request, 'users/account.html')
     elif request.method == 'POST':
@@ -74,4 +78,22 @@ def account(request):
         user.save()
         
         django_login(request, user)
-        return render(request, 'users/account.html')
+        return render(request, 'users/account.html') """
+        
+@api_view(['POST', 'GET'])
+def account(request):
+    if request.method == 'POST':
+        serializer = CustomUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+    else:
+        serializer = CustomUserSerializer(request.user)
+        return Response(serializer.data)
+
+@api_view(['GET'])
+def account_detail(request):
+    user = CustomUser.objects.get(username=request.user.username)
+    serializer = CustomUserSerializer(user)
+    return Response(serializer.data)

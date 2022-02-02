@@ -1,11 +1,11 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
 <!-- Show user account info if logged in -->
 <div id="loginApp">
-	{% csrf_token %}
-	<div v-if="user" class="container">
+	{% csrf_token %} <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+	<div v-if="user.username" class="container">
 		<div class="row">
 			<div class="col-md-12">
-				<h1>Account</h1>
+				<h1>Account [[user.username]]</h1>
 			</div>
 		</div>
 	</div>
@@ -33,7 +33,7 @@
 						<!-- Render error messages if they exist -->
 						{% if error%}
 						<h3 class="error">{{error}}</h3>
-						{% endif%} {% csrf_token %}
+						{% endif %} {% csrf_token %}
 						<label for="username-field">Username</label>
 						<input type="text" name="username" id="username-field" />
 
@@ -47,44 +47,5 @@
 		</div>
 	</div>
 </div>
-<script>
-	window.onload = function () {
-		const BASE_URL = "{% url 'users:account' %}";
-		const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0];
-		console.log(BASE_URL);
-		console.log(csrfToken.value);
-		axios.defaults.xsrfHeaderName = "X-CSRFToken";
-		axios.defaults.headers = {
-			"Content-Type": "application/json",
-			"X-CSRFToken": csrfToken.value,
-		};
-
-		const app = new Vue({
-			delimiters: ["[[", "]]"],
-			el: "#loginApp",
-			data: {
-				user: {
-					username: "{{user.username}}",
-					email: "{{user.email}}",
-					first_name: "{{user.first_name}}",
-					last_name: "{{user.last_name}}",
-					id: "{{user.id}}",
-				},
-				created: function () {
-					axios({
-						method: "GET",
-						url: BASE_URL,
-					})
-						.then((response) => {
-							this.user = response.data;
-						})
-						.catch((error) => {
-							console.log(error);
-						});
-				},
-			},
-		});
-	};
-</script>
 
 {% endblock content %}
