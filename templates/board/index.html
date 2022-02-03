@@ -1,4 +1,7 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
 <h1 class="mt-5">Todo Today</h1>
 <p class="lead">Hello <s>Moto</s> World!</p>
+<div id="loginApp">[[csrfToken.value]]<br />[[user.username]]</div>
+{% csrf_token %}
+
 <div id="board">{% endblock %}</div>

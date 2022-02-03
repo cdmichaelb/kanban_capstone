@@ -29,15 +29,17 @@
 		class="d-flex flex-column h-100"
 		style="background-color: rgba(25, 109, 81, 0.336)"
 	>
-		<!-- Navbar -->
-		{% block navbar %} {% include 'partials/_navbar.html' %} {% endblock %}
-		<!-- Content -->
-		<main class="flex-shrink-0">
-			<div class="container">{% block content %}{% endblock %}</div>
-		</main>
-		<!-- Footer -->
-		{% block footer %} {% include 'partials/_footer.html' %} {% endblock %}
-		<!-- Scripts -->
-		<script src="{% static 'js/main.js' %}"></script>
+		<div>
+			<!-- Navbar -->
+			{% block navbar %} {% include 'partials/_navbar.html' %} {% endblock %}
+			<!-- Content -->
+			<main class="flex-shrink-0">
+				<div class="container">{% block content %}{% endblock %}</div>
+			</main>
+			<!-- Footer -->
+			{% block footer %} {% include 'partials/_footer.html' %} {% endblock %}
+			<!-- Scripts -->
+			<script src="{% static 'js/main.js' %}"></script>
+		</div>
 	</body>
 </html>

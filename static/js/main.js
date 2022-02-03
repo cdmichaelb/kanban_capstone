@@ -8,20 +8,13 @@ $(document).ready(function () {
 	});
 });
 
-const BASE_URL = "{% url 'users:account' %}";
-const csrfToken = document.getElementsByName("csrfmiddlewaretoken")[0];
-console.log(BASE_URL);
-console.log(csrfToken.value);
-axios.defaults.xsrfHeaderName = "X-CSRFToken";
-axios.defaults.headers = {
-	"Content-Type": "application/json",
-	"X-CSRFToken": csrfToken.value,
-};
+const BASE_URL = "";
 
 const app = new Vue({
 	delimiters: ["[[", "]]"],
 	el: "#loginApp",
 	data: {
+		csrfToken: document.getElementsByName("csrfmiddlewaretoken")[0],
 		user: {
 			username: "{{user.username}}",
 			email: "{{user.email}}",
@@ -29,19 +22,25 @@ const app = new Vue({
 			last_name: "{{user.last_name}}",
 			id: "{{user.id}}",
 		},
-		created: function () {
-			console.log("created");
-			axios({
-				method: "GET",
-				url: BASE_URL,
+	},
+	created: function () {
+		axios.defaults.xsrfHeaderName = "X-CSRFToken";
+		axios.defaults.headers = {
+			"Content-Type": "application/json",
+			"X-CSRFToken": this.csrfToken.value,
+		};
+		console.log("created");
+		axios({
+			method: "GET",
+			url: BASE_URL + "/users/account/",
+		})
+			.then((response) => {
+				this.user = response.data;
+				console.log(this.user);
 			})
-				.then((response) => {
-					this.user = response.data;
-					console.log(this.user);
-				})
-				.catch((error) => {
-					console.log(error);
-				});
-		},
+			.catch((error) => {
+				console.log(BASE_URL);
+				console.log(error);
+			});
 	},
 });
