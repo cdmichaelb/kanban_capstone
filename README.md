@@ -3,6 +3,7 @@
 ## Project Overview
 
 An advanced Kanban task organizer. Capstone Project for PDX Code Guild Class Raven.
+
 Projected minimum viable products completion date: Feburary 18, 2022
 
 ## Functionality
