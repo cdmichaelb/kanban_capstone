@@ -1,4 +1,4 @@
-{% extends 'base.html' %} {% block content %} {% load static %}
+{% block content %} {% load static %}
 <h1 class="display">Register</h1>
 
 <form action="{% url 'users:register' %}" method="POST" class="auth-form">
@@ -17,7 +17,7 @@
 
 	<label for="password-field">Password</label>
 	<input type="password" name="password" id="password-field" />
-
+	[[csrfToken.value]]
 	<button type="submit">Submit</button>
 </form>
 

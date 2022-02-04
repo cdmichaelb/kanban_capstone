@@ -1,7 +1,16 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
 <h1 class="mt-5">Todo Today</h1>
 <p class="lead">Hello <s>Moto</s> World!</p>
-<div id="loginApp">[[csrfToken.value]]<br />[[user.username]]</div>
+<div id="loginApp">
+	[[csrfToken.value]]<br />[[user.username]]
+	<div v-if="user.username">
+		<h2>Welcome [[user.username]]!</h2>
+	</div>
+
+	<div v-else>
+		{% include 'users/login.html' %}{% include 'users/register.html' %}
+	</div>
+</div>
 {% csrf_token %}
 
 <div id="board">{% endblock %}</div>
