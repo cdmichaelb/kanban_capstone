@@ -12,6 +12,7 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('detail/', views.kanban_detail, name='kanban_detail'),
     path('create/', views.kanban_create, name='kanban_create'),
+    path('kanban/', views.kanban, name='kanban'),
     #path('admin/', admin.site.urls),
     #path('login/', LoginView.as_view(template_name='users/login.html'), name='login'),
     #path('logout/', auth_views.LogoutView.as_view(template_name='board/logout.html'), name='logout'),

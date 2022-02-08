@@ -13,9 +13,13 @@ def index(request):
 @api_view(['POST'])
 def kanban_create(request):
     serializer = KanbanSerializer(data=request.data)
+    
     if serializer.is_valid():
+        
         serializer.save()
+        
         return Response(serializer.data)
+    #print(serializer.errors)
     return Response(serializer.errors)
 
 @api_view(['GET'])
@@ -24,3 +28,8 @@ def kanban_detail(request, pk):
     serializer = KanbanDetailSerializer(kanban)
     return Response(serializer.data)
                     
+@api_view(['GET'])
+def kanban(request):
+    kanbans = Kanban.objects.all()
+    serializer = KanbanSerializer(kanbans, many=True)
+    return Response(serializer.data)

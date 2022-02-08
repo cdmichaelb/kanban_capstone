@@ -2,13 +2,49 @@
 <h1 class="mt-5">Todo Today</h1>
 <p class="lead">Hello <s>Moto</s> World!</p>
 <div id="loginApp">
-	[[csrfToken.value]]<br />[[user.username]]
 	<div v-if="user.username">
 		<h2>Welcome [[user.username]]!</h2>
 	</div>
 
 	<div v-else>
 		{% include 'users/login.html' %}{% include 'users/register.html' %}
+	</div>
+</div>
+<div id="kanbanApp">
+	[[kanbans]]
+	<div v-if="kanbans > 10">[[kanbans]] Kanban Exists</div>
+	<div v-else>
+		<h2>Create a Kanban</h2>
+		<form>
+			<div class="form-group">
+				<label for="kanban-name">Kanban Name</label>
+				<input
+					type="text"
+					class="form-control"
+					id="kanban-name"
+					name="name"
+					placeholder="Kanban Name"
+					v-model="newName"
+				/>
+			</div>
+			<div class="form-group">
+				<label for="kanban-description">Kanban Description</label>
+				<textarea
+					class="form-control"
+					id="kanban-description"
+					name="description"
+					rows="3"
+					v-model="newDescription"
+				></textarea>
+			</div>
+			<button
+				type="submit"
+				class="btn btn-primary"
+				v-on:click.prevent="createKanban"
+			>
+				Create Kanban
+			</button>
+		</form>
 	</div>
 </div>
 {% csrf_token %}

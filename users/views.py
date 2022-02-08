@@ -84,12 +84,14 @@ def logout(request):
 def account(request):
     if request.method == 'POST':
         serializer = CustomUserSerializer(data=request.data)
+        #print(serializer.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors)
     else:
         serializer = CustomUserSerializer(request.user)
+        #print(serializer.data)
         return Response(serializer.data)
 
 @api_view(['GET'])
