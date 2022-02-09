@@ -15,9 +15,12 @@ def kanban_create(request):
     serializer = KanbanSerializer(data=request.data)
     
     if serializer.is_valid():
+        print("valid")
         serializer.save()
         return Response(serializer.data)
     #print(serializer.errors)
+    print("invalid")
+    print(serializer.errors)
     return Response(serializer.errors)
 
 @api_view(['GET'])
