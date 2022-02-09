@@ -6,7 +6,7 @@ class Kanban(models.Model):
     id = models.AutoField(primary_key=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='kanbans')
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=False)   
+    description = models.TextField(blank=True)   
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     class Meta:
