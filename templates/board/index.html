@@ -7,12 +7,19 @@
 	</div>
 
 	<div v-else>
-		{% include 'users/login.html' %}{% include 'users/register.html' %}
+		<div id="loginForm" style="display: none">
+			<p class="btn border-1 border-light" id="registerButton">Register</p>
+			{% include 'users/login.html' %}
+		</div>
+		<div id="registerForm">
+			<p class="btn border-1 border-light" id="loginButton">Login</p>
+			{% include 'users/register.html' %}
+		</div>
 	</div>
 </div>
+{% if request.user.is_authenticated %}
 <div id="kanbanApp">
-	[[kanbans]]
-	<div v-if="kanbans > 10">[[kanbans]] Kanban Exists</div>
+	<div v-if="kanbans > 0">[[kanbans]] Kanban Exists</div>
 	<div v-else>
 		<h2>Create a Kanban</h2>
 		<form>
@@ -47,6 +54,7 @@
 		</form>
 	</div>
 </div>
-{% csrf_token %}
+
+{% endif %} {% csrf_token %}
 
 <div id="board">{% endblock %}</div>

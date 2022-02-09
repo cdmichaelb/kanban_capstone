@@ -7,10 +7,10 @@
 	<h3 class="error">{{error}}</h3>
 	{% endif%} {% csrf_token %}
 	<label for="username-field">Username</label>
-	<input type="text" name="username" id="username-field" />
+	<input type="text" name="username" id="login-username-field" />
 
 	<label for="password-field">Password</label>
-	<input type="password" name="password" id="password-field" />
+	<input type="password" name="password" id="login-password-field" />
 
 	<button type="submit">Submit</button>
 </form>

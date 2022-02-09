@@ -15,9 +15,7 @@ def kanban_create(request):
     serializer = KanbanSerializer(data=request.data)
     
     if serializer.is_valid():
-        
         serializer.save()
-        
         return Response(serializer.data)
     #print(serializer.errors)
     return Response(serializer.errors)
@@ -25,7 +23,7 @@ def kanban_create(request):
 @api_view(['GET'])
 def kanban_detail(request, pk):
     kanban = get_object_or_404(Kanban, pk=pk)
-    serializer = KanbanDetailSerializer(kanban)
+    serializer = KanbanSerializer(kanban)
     return Response(serializer.data)
                     
 @api_view(['GET'])

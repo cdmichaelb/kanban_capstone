@@ -1,9 +1,11 @@
 from django.db import models
+from users.models import CustomUser
 
 # Create your models here.
 class Kanban(models.Model):
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
+    description = models.TextField(blank=True)   
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     class Meta:
@@ -69,26 +71,3 @@ class Card(models.Model):
         ordering = ('-created_at',)
     def __str__(self):
         return self.name
-
-""" class Board(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    class Meta:
-        ordering = ('-created_at',)
-    def __str__(self):
-        return self.name
-class Column(models.Model):
-    name = models.CharField(max_length=255)
-    description = models.TextField(blank=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    board = models.ForeignKey(Board, on_delete=models.CASCADE)
-    class Meta:
-        ordering = ('-created_at',)
-    def __str__(self):
-        return self.name
-    
-"""

@@ -2,9 +2,27 @@
 let print = console.log; //TODO: Remove later
 
 $(document).ready(function () {
-	$("#edit-form").toggle();
-	$("#edit-button").click(function () {
-		$("#edit-form").toggle();
+	console.log("Loaded");
+	$("#mainNavbar").toggle("fast");
+	$("#loginButton").click(function (event) {
+		console.log("loginButton clicked");
+		$("#loginForm").show("slow");
+		$("#registerForm").hide("slow");
+	});
+	$("#registerButton").click(function (event) {
+		event.preventDefault();
+		$("#registerForm").show("slow");
+		$("#loginForm").hide("slow");
+	});
+	$("#navLoginButton").click(function (event) {
+		event.preventDefault();
+		$("#loginForm").show("slow");
+		$("#registerForm").hide("slow");
+	});
+	$("#navRegisterButton").click(function (event) {
+		event.preventDefault();
+		$("#registerForm").show("slow");
+		$("#loginForm").hide("slow");
 	});
 });
 

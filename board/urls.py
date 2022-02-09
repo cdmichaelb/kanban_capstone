@@ -13,13 +13,5 @@ urlpatterns = [
     path('detail/', views.kanban_detail, name='kanban_detail'),
     path('create/', views.kanban_create, name='kanban_create'),
     path('kanban/', views.kanban, name='kanban'),
-    #path('admin/', admin.site.urls),
-    #path('login/', LoginView.as_view(template_name='users/login.html'), name='login'),
-    #path('logout/', auth_views.LogoutView.as_view(template_name='board/logout.html'), name='logout'),
-    #path('users/', include('users.urls')),
-    #path('signup/', views.signup, name='signup'),
-    #path('boards/', include('boards.urls', namespace='boards')),
-    #path('accounts/', include('django.contrib.auth.urls')),
-    #path('accounts/profile/', views.profile, name='profile'),
-    #path('accounts/profile/edit/', views.edit_profile, name='edit_profile'),
+    
 ]
