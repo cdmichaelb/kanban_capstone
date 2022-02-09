@@ -1,3 +1,4 @@
+from urllib import response
 from django.shortcuts import render, get_object_or_404
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -12,16 +13,21 @@ def index(request):
 
 @api_view(['POST'])
 def kanban_create(request):
-    serializer = KanbanSerializer(data=request.data)
+    response = Response()
+    serializer = KanbanSerializer(Kanban.objects.all(), many=True)
+
+    newKanban = Kanban.objects.create(name=request.data['name'], description=request.data['description'], user=request.user)
     
-    if serializer.is_valid():
-        print("valid")
-        serializer.save()
-        return Response(serializer.data)
-    #print(serializer.errors)
-    print("invalid")
-    print(serializer.errors)
-    return Response(serializer.errors)
+    # Should probably use messages here
+    if newKanban is not None:
+        response.status_code = 201
+        response.data = {'kanbans': serializer.data}
+    else:
+        response.status_code = 400
+        response.data = {'message': 'Kanban could not be created'}
+    
+    return response
+
 
 @api_view(['GET'])
 def kanban_detail(request, pk):
