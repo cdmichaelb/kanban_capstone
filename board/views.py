@@ -14,21 +14,20 @@ def index(request):
 @api_view(['POST'])
 def kanban_create(request):
     response = Response()
-    #kanbans = list(Kanban.objects.all().order_by('-created_at').values())
-    #kanbans = list(Kanban.objects.filter(user=request.user).values())
-    #serializer = KanbanSerializer(data=kanbans, many=True)
 
     newKanban = Kanban.objects.create(name=request.data['name'], description=request.data['description'], user=request.user)
-    
-    # Should probably use messages here
-    if newKanban is not None:
-        response.status_code = 201
-        #response.data = {'kanbans': serializer.data}
-    else:
-        response.status_code = 400
-        response.data = {'message': 'Kanban could not be created'}
+    user = CustomUser.objects.get(id=request.user.id)
+    response.data = {
+            'id': newKanban.id,
+            'name': newKanban.name,
+            'description': newKanban.description,
+            'created_at': newKanban.created_at,
+            'updated_at': newKanban.updated_at,
+            'user': user.id
+            }
+    serializer = KanbanSerializer(data=response.data, many=False)
 
-    """     if serializer.is_valid():
+    if serializer.is_valid():
         serializer.save()
         response.status_code = 201
         response.data = {'kanbans': serializer.data}  
@@ -37,8 +36,8 @@ def kanban_create(request):
         print(serializer.errors)
         response.status_code = 400
         response.data = {'message': 'Kanban could not be created'}
-        print(response.data, " is not valid") """
-
+        print(response.data, " is not valid")
+    
     return response
 
 

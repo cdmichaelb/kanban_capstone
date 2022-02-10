@@ -19,7 +19,7 @@
 </div>
 {% if request.user.is_authenticated %}
 <div id="kanbanApp">
-	<div v-if="kanbans > 10">[[kanbans]] Kanban Exists</div>
+	<div v-if="kanbans > 20">[[kanbans]] Kanban Exists</div>
 	<div v-else>
 		<h2>Create a Kanban</h2>
 		<form>
