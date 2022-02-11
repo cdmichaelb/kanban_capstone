@@ -1,6 +1,5 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
-<h1 class="mt-5">Todo Today</h1>
-<p class="lead">Hello <s>Moto</s> World!</p>
+<br /><br /><br />
 <div id="loginApp">
 	<div v-if="user.username">
 		<h2>Welcome [[user.username]]!</h2>
@@ -19,42 +18,73 @@
 </div>
 {% if request.user.is_authenticated %}
 <div id="kanbanApp">
-	<div v-if="kanbans > 20">[[kanbans]] Kanban Exists</div>
-	<div v-else>
-		<h2>Create a Kanban</h2>
-		<form>
-			<div class="form-group">
-				<label for="kanban-name">Kanban Name</label>
-				<input
-					type="text"
-					class="form-control"
-					id="kanban-name"
-					name="name"
-					placeholder="Kanban Name"
-					v-model="newName"
-				/>
+	<div id="kanban-list-page">
+		<div v-if="kanban_count > 0">
+			<div v-for="kanban in kanbans">
+				<div
+					class="btn bg-dark text-light border-1 border-light"
+					v-on:click="viewKanban(kanban.id)"
+				>
+					<div class="kanban-header">
+						<h3>[[kanban.id]]. [[kanban.name]]</h3>
+					</div>
+					<div class="kanban-body">
+						<p>
+							[[kanban.description]]
+							<br />
+							Created at [[kanban.created_at]]. Last updated at
+							[[kanban.updated_at]].
+						</p>
+					</div>
+				</div>
 			</div>
-			<div class="form-group">
-				<label for="kanban-description">Kanban Description</label>
-				<textarea
-					class="form-control"
-					id="kanban-description"
-					name="description"
-					rows="3"
-					v-model="newDescription"
-				></textarea>
-			</div>
-			<button
-				type="submit"
-				class="btn btn-primary"
-				v-on:click.prevent="createKanban"
-			>
-				Create Kanban
-			</button>
-		</form>
+		</div>
+		<div v-else></div>
+		<div class="create-kanban">
+			<h2>Create a Kanban</h2>
+			<form>
+				<div class="form-group">
+					<label for="kanban-name">Kanban Name</label>
+					<input
+						type="text"
+						class="form-control"
+						id="kanban-name"
+						name="name"
+						placeholder="Kanban Name"
+						v-model="newName"
+					/>
+				</div>
+				<div class="form-group">
+					<label for="kanban-description">Kanban Description</label>
+					<textarea
+						class="form-control"
+						id="kanban-description"
+						name="description"
+						rows="3"
+						v-model="newDescription"
+					></textarea>
+				</div>
+				<button
+					type="submit"
+					class="btn btn-primary"
+					v-on:click.prevent="createKanban"
+				>
+					Create Kanban
+				</button>
+			</form>
+		</div>
 	</div>
+	<div id="kanban-detail-page">
+		<div class="card">
+			<h2>[[kanbans.name]]</h2>
+			<div class="card-body">
+				<h5 class="card-title">[[kanbans.description]]</h5>
+				<p class="card-text">
+					Created at [[kanbans.created_at]]. Last updated at
+					[[kanbans.updated_at]].
+				</p>
+			</div>
+		</div>
+	</div>
+	{% endif %} {% csrf_token %} {% endblock %}
 </div>
-
-{% endif %} {% csrf_token %}
-
-<div id="board">{% endblock %}</div>

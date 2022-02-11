@@ -11,3 +11,10 @@ class KanbanSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'created_at', 'updated_at', 'user']
         extra_kwargs = {'user': {'required': False}}
         
+class ColumnSerializer(serializers.ModelSerializer):
+    #kanban = KanbanSerializer()
+    #print(kanban, " is kanban")
+    class Meta:
+        model = Column
+        fields = ['id', 'name', 'kanban', 'created_at', 'updated_at', 'user']
+        extra_kwargs = {'user': {'required': False}}

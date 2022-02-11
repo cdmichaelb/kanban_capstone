@@ -3,9 +3,10 @@ let print = console.log; //TODO: Remove later
 
 $(document).ready(function () {
 	console.log("Loaded");
+	$("#kanban-detail-page").hide("fast");
 	$("#mainNavbar").toggle("fast");
 	$("#loginButton").click(function (event) {
-		console.log("loginButton clicked");
+		event.preventDefault();
 		$("#loginForm").show("slow");
 		$("#registerForm").hide("slow");
 	});
@@ -68,7 +69,7 @@ const app2 = new Vue({
 	el: "#kanbanApp",
 	data: {
 		csrfToken: document.getElementsByName("csrfmiddlewaretoken")[0],
-		kanban: {
+		kanbans: {
 			id: "{{kanban.id}}",
 			name: "{{kanban.name}}",
 			description: "{{kanban.description}}",
@@ -98,12 +99,9 @@ const app2 = new Vue({
 		},
 		newName: "",
 		newDescription: "",
-		kanbans: 0,
+		kanban_count: 0,
 	},
 	created: function () {
-		this.newName = "";
-		this.newDescription = "";
-		//this.kanbans = 0;
 		axios.defaults.xsrfHeaderName = "X-CSRFToken";
 		axios.defaults.headers = {
 			"Content-Type": "application/json",
@@ -115,9 +113,9 @@ const app2 = new Vue({
 			url: BASE_URL + "/kanban/",
 		})
 			.then((response) => {
-				this.kanban = response.data;
 				console.log(response.data);
-				this.kanbans = Object.values(response.data).length;
+				this.kanbans = response.data.kanbans;
+				this.kanban_count = Object.values(response.data).length;
 			})
 			.catch((error) => {
 				console.log(BASE_URL);
@@ -135,8 +133,27 @@ const app2 = new Vue({
 				},
 			})
 				.then((response) => {
-					this.kanban = response.data;
-					this.kanbans = this.kanbans + 1;
+					this.kanbans = response.data.kanban_list;
+					console.log(this.kanbans);
+					this.kanban_count = Object.values(response.data).length;
+					this.kanban_count = this.kanban_count + 1;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		viewKanban: function (kanban) {
+			console.log(kanban);
+			axios({
+				method: "GET",
+				url: BASE_URL + "/detail/" + kanban,
+			})
+				.then((response) => {
+					$("#kanban-list-page").hide("fast");
+					$("#kanban-detail-page").show("fast");
+					console.log(response.data);
+					this.kanbans = response.data;
 				})
 				.catch((error) => {
 					console.log(BASE_URL);

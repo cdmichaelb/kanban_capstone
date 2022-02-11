@@ -15,7 +15,8 @@ def index(request):
 def kanban_create(request):
     response = Response()
 
-    newKanban = Kanban.objects.create(name=request.data['name'], description=request.data['description'], user=request.user)
+    newKanban = Kanban(name=request.data['name'], description=request.data['description'], user=request.user)
+    
     user = CustomUser.objects.get(id=request.user.id)
     response.data = {
             'id': newKanban.id,
@@ -25,21 +26,61 @@ def kanban_create(request):
             'updated_at': newKanban.updated_at,
             'user': user.id
             }
+    
     serializer = KanbanSerializer(data=response.data, many=False)
 
     if serializer.is_valid():
         serializer.save()
         response.status_code = 201
-        response.data = {'kanbans': serializer.data}  
-        print(response.data, " is valid")
+        response.data = {
+            'kanbans': serializer.data,
+            'kanban_list': KanbanSerializer(Kanban.objects.all(), many=True).data
+            }  
+        
     else:
         print(serializer.errors)
         response.status_code = 400
         response.data = {'message': 'Kanban could not be created'}
+    
+    return response
+
+@api_view(['POST'])
+def column_create(request):
+    response = Response()
+
+    newColumn = Column(name=request.data['name'], kanban=Kanban.objects.get(id=request.data['kanban']), user=request.user)
+    
+    user = CustomUser.objects.get(id=request.user.id)
+    response.data = {
+            'id': newColumn.id,
+            'name': newColumn.name,
+            'kanban': newColumn.kanban.id,
+            'created_at': newColumn.created_at,
+            'updated_at': newColumn.updated_at,
+            'user': user.id
+            }
+    serializer = ColumnSerializer(data=response.data, many=False)
+
+    if serializer.is_valid():
+        serializer.save()
+        response.status_code = 201
+        response.data = {'columns': serializer.data}  
+        print(response.data, " is valid")
+    else:
+        print(serializer.errors)
+        response.status_code = 400
+        response.data = {'message': 'Column could not be created'}
         print(response.data, " is not valid")
     
     return response
 
+@api_view(['GET'])
+def kanban(request):
+    response = Response()
+    kanbans = Kanban.objects.all()
+    serializer = KanbanSerializer(kanbans, many=True)
+    response.data = {'kanbans': serializer.data}
+    return response
 
 @api_view(['GET'])
 def kanban_detail(request, pk):
@@ -47,8 +88,8 @@ def kanban_detail(request, pk):
     serializer = KanbanSerializer(kanban)
     return Response(serializer.data)
                     
-@api_view(['GET'])
-def kanban(request):
-    kanbans = Kanban.objects.all()
-    serializer = KanbanSerializer(kanbans, many=True)
-    return Response(serializer.data)
+
+
+
+
+
