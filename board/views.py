@@ -47,7 +47,7 @@ def kanban_create(request):
 @api_view(['POST'])
 def column_create(request):
     response = Response()
-
+    #print(request.data)
     newColumn = Column(name=request.data['name'], kanban=Kanban.objects.get(id=request.data['kanban']), user=request.user)
     
     user = CustomUser.objects.get(id=request.user.id)
@@ -83,13 +83,17 @@ def kanban(request):
     return response
 
 @api_view(['GET'])
+def column_detail(request, pk):
+    response = Response()
+    print(pk, " is pk")
+    print(response, " is response")
+    column = get_object_or_404(Column, kanban=pk)
+    serializer = ColumnSerializer(column)
+    response.data = {'column': serializer.data}
+    return response
+
+@api_view(['GET'])
 def kanban_detail(request, pk):
     kanban = get_object_or_404(Kanban, pk=pk)
     serializer = KanbanSerializer(kanban)
     return Response(serializer.data)
-                    
-
-
-
-
-

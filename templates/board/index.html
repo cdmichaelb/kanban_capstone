@@ -85,6 +85,61 @@
 				</p>
 			</div>
 		</div>
+		<!-- create column -->
+		<div class="create-column">
+			<h2>Create a Column</h2>
+			<form>
+				<div class="form-group">
+					<label for="column-name">Column Name</label>
+					<input
+						type="text"
+						class="form-control"
+						id="column-name"
+						name="name"
+						placeholder="Column Name"
+						v-model="newColumnName"
+					/>
+				</div>
+				<div class="form-group">
+					<label for="column-description">Column Description</label>
+					<textarea
+						class="form-control"
+						id="column-description"
+						name="description"
+						rows="3"
+						v-model="newColumnDescription"
+					></textarea>
+				</div>
+				<button
+					type="submit"
+					class="btn btn-primary"
+					v-on:click.prevent="createColumn"
+				>
+					Create Column
+				</button>
+			</form>
+		</div>
+		<!-- List columns -->
+		<div class="column-list">
+			<div v-for="column in kanbans.columns">
+				<div
+					class="btn bg-dark text-light border-1 border-light"
+					v-on:click="viewColumn(column.id)"
+				>
+					<div class="column-header">
+						<h3>[[column.id]]. [[column.name]]</h3>
+					</div>
+					<div class="column-body">
+						<p>
+							[[column.description]]
+							<br />
+							Created at [[column.created_at]]. Last updated at
+							[[column.updated_at]].
+						</p>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
 	{% endif %} {% csrf_token %} {% endblock %}
 </div>

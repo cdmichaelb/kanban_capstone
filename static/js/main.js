@@ -99,6 +99,8 @@ const app2 = new Vue({
 		},
 		newName: "",
 		newDescription: "",
+		newColumnName: "",
+		newColumnDescription: "",
 		kanban_count: 0,
 	},
 	created: function () {
@@ -152,6 +154,173 @@ const app2 = new Vue({
 				.then((response) => {
 					$("#kanban-list-page").hide("fast");
 					$("#kanban-detail-page").show("fast");
+					//this.kanbans.columns = this.getColumns(response.data.id);
+					//this.kanbans.columns.cards = this.getCards(this.kanbans.columns);
+					console.log(response.data);
+					this.kanbans = response.data;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		backToList: function () {
+			$("#kanban-list-page").show("fast");
+			$("#kanban-detail-page").hide("fast");
+		},
+		getColumns: function (kanban) {
+			axios({
+				method: "GET",
+				url: BASE_URL + "/columns/" + kanban,
+			})
+				.then((response) => {
+					console.log(response.data);
+					this.kanbans = response.data;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		getCards: function (column) {
+			axios({
+				method: "GET",
+				url: BASE_URL + "/cards/" + column,
+			})
+				.then((response) => {
+					console.log(response.data);
+					this.kanbans = response.data;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		createColumn: function () {
+			axios({
+				method: "POST",
+				url: BASE_URL + "/column/",
+				data: {
+					name: this.newColumnName,
+					description: this.newColumnDescription,
+					kanban: this.kanbans.id,
+				},
+			})
+				.then((response) => {
+					console.log(response.data);
+					this.kanbans.columns = response.data;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		createCard: function (column) {
+			axios({
+				method: "POST",
+				url: BASE_URL + "/cards/" + column,
+				data: {
+					name: this.newName,
+					description: this.newDescription,
+				},
+			})
+				.then((response) => {
+					console.log(response.data);
+					this.kanbans = response.data;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		updateKanban: function (kanban) {
+			axios({
+				method: "PUT",
+				url: BASE_URL + "/update/" + kanban,
+				data: {
+					name: this.newName,
+					description: this.newDescription,
+				},
+			})
+				.then((response) => {
+					console.log(response.data);
+					this.kanbans = response.data;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		updateColumn: function (column) {
+			axios({
+				method: "PUT",
+				url: BASE_URL + "/columns/update/" + column,
+				data: {
+					name: this.newName,
+					description: this.newDescription,
+				},
+			})
+				.then((response) => {
+					console.log(response.data);
+					this.kanbans = response.data;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		updateCard: function (card) {
+			axios({
+				method: "PUT",
+				url: BASE_URL + "/cards/update/" + card,
+				data: {
+					name: this.newName,
+					description: this.newDescription,
+				},
+			})
+				.then((response) => {
+					console.log(response.data);
+					this.kanbans = response.data;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		deleteKanban: function (kanban) {
+			axios({
+				method: "DELETE",
+				url: BASE_URL + "/delete/" + kanban,
+			})
+				.then((response) => {
+					console.log(response.data);
+					this.kanbans = response.data;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		deleteColumn: function (column) {
+			axios({
+				method: "DELETE",
+				url: BASE_URL + "/columns/delete/" + column,
+			})
+				.then((response) => {
+					console.log(response.data);
+					this.kanbans = response.data;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		deleteCard: function (card) {
+			axios({
+				method: "DELETE",
+				url: BASE_URL + "/cards/delete/" + card,
+			})
+				.then((response) => {
 					console.log(response.data);
 					this.kanbans = response.data;
 				})
