@@ -3,16 +3,28 @@ from .models import *
 from users.serializers import UserDetailSerializer
 from users.models import CustomUser
 
-class ColumnSerializer(serializers.ModelSerializer):
+class CardSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Column
-        fields = ['id', 'name', 'kanban', 'created_at', 'updated_at', 'user']
+        model = Card
+        fields = ['id', 'name', 'description', 'column', 'created_at', 'updated_at', 'user']
         extra_kwargs = {
             'user': {'required': False},
-            'kanban': {'read_only': True}
+            'column': {'read_only': True, 'required': False, 'allow_null': True}
             }
-class KanbanSerializer(serializers.ModelSerializer):
 
+class ColumnSerializer(serializers.ModelSerializer):
+        class Meta:
+            model = Column
+            fields = ['id', 'name', 'kanban', 'created_at', 'updated_at', 'index', 'user']
+            extra_kwargs = {
+                'kanban': {
+                    'required': True,
+                    'read_only': False,
+                    'allow_null': False
+                    }
+                }
+
+class KanbanSerializer(serializers.ModelSerializer):
     columns = ColumnSerializer(many=True)
     class Meta:
         model = Kanban
@@ -21,6 +33,9 @@ class KanbanSerializer(serializers.ModelSerializer):
             'user': {'required': False},
             'columns': {
                 'required': False, 
-                'read_only': True
+                'read_only': True,
+                'allow_null': True
                 }
             }
+
+

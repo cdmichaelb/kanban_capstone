@@ -15,5 +15,7 @@ urlpatterns = [
     path('kanban/', views.kanban, name='kanban'),
     path('column/', views.column_create, name='column_create'),
     path('column/<int:pk>', views.column_detail, name='column_detail'),
+    path('card/', views.card_create, name='card_create'),
+    path('card/<int:pk>', views.card_detail, name='card_detail'),
     
 ]

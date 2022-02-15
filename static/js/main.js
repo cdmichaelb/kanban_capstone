@@ -171,7 +171,7 @@ const app2 = new Vue({
 		getColumns: function (kanban) {
 			axios({
 				method: "GET",
-				url: BASE_URL + "/columns/" + kanban,
+				url: BASE_URL + "/column/" + kanban,
 			})
 				.then((response) => {
 					console.log(response.data);
@@ -185,7 +185,7 @@ const app2 = new Vue({
 		getCards: function (column) {
 			axios({
 				method: "GET",
-				url: BASE_URL + "/cards/" + column,
+				url: BASE_URL + "/card/" + column,
 			})
 				.then((response) => {
 					console.log(response.data);
@@ -208,6 +208,7 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					console.log(response.data);
+					console.log(this.kanbans.id, "kanban id");
 					this.kanbans.columns = response.data;
 				})
 				.catch((error) => {
@@ -218,7 +219,7 @@ const app2 = new Vue({
 		createCard: function (column) {
 			axios({
 				method: "POST",
-				url: BASE_URL + "/cards/" + column,
+				url: BASE_URL + "/card/" + column,
 				data: {
 					name: this.newName,
 					description: this.newDescription,
@@ -254,7 +255,7 @@ const app2 = new Vue({
 		updateColumn: function (column) {
 			axios({
 				method: "PUT",
-				url: BASE_URL + "/columns/update/" + column,
+				url: BASE_URL + "/column/update/" + column,
 				data: {
 					name: this.newName,
 					description: this.newDescription,
@@ -272,7 +273,7 @@ const app2 = new Vue({
 		updateCard: function (card) {
 			axios({
 				method: "PUT",
-				url: BASE_URL + "/cards/update/" + card,
+				url: BASE_URL + "/card/update/" + card,
 				data: {
 					name: this.newName,
 					description: this.newDescription,
@@ -304,7 +305,7 @@ const app2 = new Vue({
 		deleteColumn: function (column) {
 			axios({
 				method: "DELETE",
-				url: BASE_URL + "/columns/delete/" + column,
+				url: BASE_URL + "/column/delete/" + column,
 			})
 				.then((response) => {
 					console.log(response.data);
@@ -318,7 +319,7 @@ const app2 = new Vue({
 		deleteCard: function (card) {
 			axios({
 				method: "DELETE",
-				url: BASE_URL + "/cards/delete/" + card,
+				url: BASE_URL + "/card/delete/" + card,
 			})
 				.then((response) => {
 					console.log(response.data);
