@@ -101,6 +101,8 @@ const app2 = new Vue({
 		newDescription: "",
 		newColumnName: "",
 		newColumnDescription: "",
+		newCardName: "",
+		newCardDescription: "",
 		kanban_count: 0,
 	},
 	created: function () {
@@ -125,6 +127,7 @@ const app2 = new Vue({
 			});
 	},
 	methods: {
+		// Add a new kanban
 		createKanban: function () {
 			axios({
 				method: "POST",
@@ -136,9 +139,25 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					this.kanbans = response.data.kanban_list;
-					console.log(this.kanbans);
+					//console.log(this.kanbans);
 					this.kanban_count = Object.values(response.data).length;
 					this.kanban_count = this.kanban_count + 1;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		// Get columns from a specific kanban
+		getColumns: function (kanban) {
+			axios({
+				method: "GET",
+				url: BASE_URL + "/column/" + kanban,
+			})
+				.then((response) => {
+					this.kanbans.columns = response.data.column_list;
+					console.log("logging columns");
+					console.log(this.kanbans.columns);
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -158,6 +177,7 @@ const app2 = new Vue({
 					//this.kanbans.columns.cards = this.getCards(this.kanbans.columns);
 					console.log(response.data);
 					this.kanbans = response.data;
+					this.getColumns(response.data.id);
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -167,20 +187,6 @@ const app2 = new Vue({
 		backToList: function () {
 			$("#kanban-list-page").show("fast");
 			$("#kanban-detail-page").hide("fast");
-		},
-		getColumns: function (kanban) {
-			axios({
-				method: "GET",
-				url: BASE_URL + "/column/" + kanban,
-			})
-				.then((response) => {
-					console.log(response.data);
-					this.kanbans = response.data;
-				})
-				.catch((error) => {
-					console.log(BASE_URL);
-					console.log(error);
-				});
 		},
 		getCards: function (column) {
 			axios({
@@ -207,9 +213,7 @@ const app2 = new Vue({
 				},
 			})
 				.then((response) => {
-					console.log(response.data);
-					console.log(this.kanbans.id, "kanban id");
-					this.kanbans.columns = response.data;
+					this.kanbans.columns = response.data.column_list;
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -219,15 +223,17 @@ const app2 = new Vue({
 		createCard: function (column) {
 			axios({
 				method: "POST",
-				url: BASE_URL + "/card/" + column,
+				url: BASE_URL + "/card/",
 				data: {
-					name: this.newName,
-					description: this.newDescription,
+					name: this.newCardName,
+					description: this.newCardDescription,
+					column: column,
 				},
 			})
 				.then((response) => {
 					console.log(response.data);
-					this.kanbans = response.data;
+					//this.kanbans = response.data;
+					this.kanbans.columns.cards = response.data.cards;
 				})
 				.catch((error) => {
 					console.log(BASE_URL);

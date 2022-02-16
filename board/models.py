@@ -32,11 +32,14 @@ class Column(models.Model):
         return self.name
 
 class Card(models.Model):
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    column = models.ForeignKey(Column, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    index = models.IntegerField(default=0)
+    column = models.ForeignKey(Column, on_delete=models.CASCADE, related_name='cards')
     class Meta:
         ordering = ('-created_at',)
     def __str__(self):

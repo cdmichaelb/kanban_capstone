@@ -122,10 +122,7 @@
 		<!-- List columns -->
 		<div class="column-list">
 			<div v-for="column in kanbans.columns">
-				<div
-					class="btn bg-dark text-light border-1 border-light"
-					v-on:click="viewColumn(column.id)"
-				>
+				<div class="btn bg-dark text-light border-1 border-light">
 					<div class="column-header">
 						<h3>[[column.id]]. [[column.name]]</h3>
 					</div>
@@ -133,9 +130,60 @@
 						<p>
 							[[column.description]]
 							<br />
-							Created at [[column.created_at]]. Last updated at
-							[[column.updated_at]].
+							<!-- Created at [[column.created_at]]. Last updated at
+							[[column.updated_at]]. -->
 						</p>
+						<div class="cards">
+							<div v-for="card in kanbans.columns.cards">
+								<div class="btn bg-dark text-light border-1 border-light">
+									<div class="card-header">
+										<h3>[[card.id]]. [[card.name]]</h3>
+									</div>
+									<div class="card-body">
+										<p>
+											[[card.description]]
+											<br />
+											Created at [[card.created_at]]. Last updated at
+											[[card.updated_at]].
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- create card -->
+						<div class="create-card">
+							<h2>Create a Card</h2>
+							<form>
+								<div class="form-group">
+									<label for="card-name">Card Name</label>
+									<input
+										type="text"
+										class="form-control"
+										id="card-name"
+										name="name"
+										placeholder="Card Name"
+										v-model="newCardName"
+									/>
+								</div>
+								<div class="form-group">
+									<label for="card-description">Card Description</label>
+									<textarea
+										class="form-control"
+										id="card-description"
+										name="description"
+										rows="3"
+										v-model="newCardDescription"
+									></textarea>
+								</div>
+								<button
+									type="submit"
+									class="btn btn-primary"
+									v-on:click.prevent="createCard(column.id)"
+								>
+									Create Card
+								</button>
+							</form>
+						</div>
 					</div>
 				</div>
 			</div>

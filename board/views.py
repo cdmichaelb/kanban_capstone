@@ -22,7 +22,8 @@ def kanban_create(request):
             'description': newKanban.description,
             'created_at': newKanban.created_at,
             'updated_at': newKanban.updated_at,
-            'user': user.id
+            'user': user.id,
+            #'columns': []
             }
     
     serializer = KanbanSerializer(data=response.data, many=False)
@@ -77,37 +78,15 @@ def column_create(request):
     
     return response
 
-@api_view(['GET'])
-def kanban(request):
-    response = Response()
-    kanbans = Kanban.objects.all()
-    serializer = KanbanSerializer(kanbans, many=True)
-    response.data = {'kanbans': serializer.data}
-    return response
-
-@api_view(['GET'])
-def column_detail(request, pk):
-    response = Response()
-    column = get_object_or_404(Column, kanban=pk)
-    serializer = ColumnSerializer(column)
-    response.data = {'column': serializer.data}
-    return response
-
-@api_view(['GET'])
-def kanban_detail(request, pk):
-    kanban = get_object_or_404(Kanban, pk=pk)
-    serializer = KanbanSerializer(kanban)
-    return Response(serializer.data)
-
 @api_view(['POST'])
 def card_create(request):
     response = Response()
-    newCard = Card(title=request.data['title'], description=request.data['description'], column=Column.objects.get(id=request.data['column']), user=request.user)
+    newCard = Card(name=request.data['name'], description=request.data['description'], column=Column.objects.get(id=request.data['column']), user=request.user)
     
     user = CustomUser.objects.get(id=request.user.id)
     response.data = {
             'id': newCard.id,
-            'title': newCard.title,
+            'name': newCard.name,
             'description': newCard.description,
             'column': newCard.column.id,
             'created_at': newCard.created_at,
@@ -119,7 +98,10 @@ def card_create(request):
     if serializer.is_valid():
         serializer.save()
         response.status_code = 201
-        response.data = {'cards': serializer.data}  
+        response.data = {
+            'cards': serializer.data, 
+            'card_list': CardSerializer(Card.objects.all(), many=True).data
+            }
         print(response.data, " is valid")
     else:
         print(serializer.errors)
@@ -128,6 +110,28 @@ def card_create(request):
         print(response.data, " is not valid")
     
     return response
+
+@api_view(['GET'])
+def kanban(request):
+    response = Response()
+    kanbans = Kanban.objects.all()
+    serializer = KanbanSerializer(kanbans, many=True)
+    response.data = {'kanbans': serializer.data}
+    return response
+
+@api_view(['GET'])
+def column_detail(request, pk):
+    response = Response()
+    column = Column.objects.filter(kanban=pk)
+    serializer = ColumnSerializer(column, many=True)
+    response.data = {'column_list': serializer.data}
+    return response
+
+@api_view(['GET'])
+def kanban_detail(request, pk):
+    kanban = get_object_or_404(Kanban, pk=pk)
+    serializer = KanbanSerializer(kanban)
+    return Response(serializer.data)
 
 @api_view(['GET'])
 def card_detail(request, pk):

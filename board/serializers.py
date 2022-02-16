@@ -9,7 +9,7 @@ class CardSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'description', 'column', 'created_at', 'updated_at', 'user']
         extra_kwargs = {
             'user': {'required': False},
-            'column': {'read_only': True, 'required': False, 'allow_null': True}
+            'column': {'read_only': False, 'required': False, 'allow_null': True}
             }
 
 class ColumnSerializer(serializers.ModelSerializer):
@@ -25,7 +25,7 @@ class ColumnSerializer(serializers.ModelSerializer):
                 }
 
 class KanbanSerializer(serializers.ModelSerializer):
-    columns = ColumnSerializer(many=True)
+    #columns = ColumnSerializer(many=True) or []
     class Meta:
         model = Kanban
         fields = ['id', 'name', 'description', 'created_at', 'updated_at', 'user', 'columns']
@@ -33,7 +33,7 @@ class KanbanSerializer(serializers.ModelSerializer):
             'user': {'required': False},
             'columns': {
                 'required': False, 
-                'read_only': True,
+                'read_only': False,
                 'allow_null': True
                 }
             }
