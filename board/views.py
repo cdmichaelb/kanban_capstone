@@ -81,6 +81,7 @@ def column_create(request):
 @api_view(['POST'])
 def card_create(request):
     response = Response()
+    print("req: ", request.data)
     newCard = Card(name=request.data['name'], description=request.data['description'], column=Column.objects.get(id=request.data['column']), user=request.user)
     
     user = CustomUser.objects.get(id=request.user.id)
@@ -135,6 +136,9 @@ def kanban_detail(request, pk):
 
 @api_view(['GET'])
 def card_detail(request, pk):
-    card = get_object_or_404(Card, pk=pk)
-    serializer = CardSerializer(card)
+    response = Response()
+    card = Card.objects.filter(column=pk)
+    serializer = CardSerializer(card, many=True)
+    response.data = {'card_list': serializer.data}
+    print(response.data)
     return Response(serializer.data)

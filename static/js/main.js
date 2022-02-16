@@ -139,7 +139,6 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					this.kanbans = response.data.kanban_list;
-					//console.log(this.kanbans);
 					this.kanban_count = Object.values(response.data).length;
 					this.kanban_count = this.kanban_count + 1;
 				})
@@ -148,7 +147,6 @@ const app2 = new Vue({
 					console.log(error);
 				});
 		},
-		// Get columns from a specific kanban
 		getColumns: function (kanban) {
 			axios({
 				method: "GET",
@@ -156,8 +154,10 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					this.kanbans.columns = response.data.column_list;
+					console.log("Columns: " + this.kanbans.columns);
+
 					console.log("logging columns");
-					console.log(this.kanbans.columns);
+					console.log(JSON.stringify(this.kanbans.columns));
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -175,9 +175,9 @@ const app2 = new Vue({
 					$("#kanban-detail-page").show("fast");
 					//this.kanbans.columns = this.getColumns(response.data.id);
 					//this.kanbans.columns.cards = this.getCards(this.kanbans.columns);
-					console.log(response.data);
+					//console.log(response.data);
 					this.kanbans = response.data;
-					this.getColumns(response.data.id);
+					this.getColumns(kanban);
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -210,6 +210,7 @@ const app2 = new Vue({
 					name: this.newColumnName,
 					description: this.newColumnDescription,
 					kanban: this.kanbans.id,
+					column: this.kanbans.columns.id,
 				},
 			})
 				.then((response) => {
@@ -231,6 +232,7 @@ const app2 = new Vue({
 				},
 			})
 				.then((response) => {
+					console.log("card created");
 					console.log(response.data);
 					//this.kanbans = response.data;
 					this.kanbans.columns.cards = response.data.cards;

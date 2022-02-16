@@ -80,8 +80,8 @@
 			<div class="card-body">
 				<h5 class="card-title">[[kanbans.description]]</h5>
 				<p class="card-text">
-					Created at [[kanbans.created_at]]. Last updated at
-					[[kanbans.updated_at]].
+					<!-- Created at [[kanbans.created_at]]. Last updated at
+					[[kanbans.updated_at]]. -->
 				</p>
 			</div>
 		</div>
@@ -134,8 +134,9 @@
 							[[column.updated_at]]. -->
 						</p>
 						<div class="cards">
-							<div v-for="card in kanbans.columns.cards">
-								<div class="btn bg-dark text-light border-1 border-light">
+							<p>test 1</p>
+							<div v-for="card in column.cards">
+								<div class="btn bg-light text-dark border-1 border-light">
 									<div class="card-header">
 										<h3>[[card.id]]. [[card.name]]</h3>
 									</div>
@@ -143,8 +144,8 @@
 										<p>
 											[[card.description]]
 											<br />
-											Created at [[card.created_at]]. Last updated at
-											[[card.updated_at]].
+											<!-- Created at [[card.created_at]]. Last updated at
+											[[card.updated_at]]. -->
 										</p>
 									</div>
 								</div>

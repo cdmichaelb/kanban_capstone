@@ -1,3 +1,4 @@
+from email.policy import default
 from rest_framework import serializers
 from .models import *
 from users.serializers import UserDetailSerializer
@@ -13,19 +14,20 @@ class CardSerializer(serializers.ModelSerializer):
             }
 
 class ColumnSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = Column
-            fields = ['id', 'name', 'kanban', 'created_at', 'updated_at', 'index', 'user']
-            extra_kwargs = {
-                'kanban': {
-                    'required': True,
-                    'read_only': False,
-                    'allow_null': False
-                    }
+    cards = CardSerializer(many=True, read_only=True, default=[])
+    class Meta:
+        model = Column
+        fields = ['id', 'name', 'kanban', 'created_at', 'updated_at', 'index', 'user', 'cards']
+        extra_kwargs = {
+            'kanban': {
+                'required': True,
+                'read_only': False,
+                'allow_null': False
                 }
+            }
 
 class KanbanSerializer(serializers.ModelSerializer):
-    #columns = ColumnSerializer(many=True) or []
+    columns = ColumnSerializer(many=True, default=[], read_only=True)
     class Meta:
         model = Kanban
         fields = ['id', 'name', 'description', 'created_at', 'updated_at', 'user', 'columns']
