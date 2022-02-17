@@ -39,5 +39,3 @@ class KanbanSerializer(serializers.ModelSerializer):
                 'allow_null': True
                 }
             }
-
-

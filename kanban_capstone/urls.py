@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
 
 urlpatterns = [
     path('api-auth', include('rest_framework.urls')),
@@ -22,4 +23,5 @@ urlpatterns = [
     #path('board/', include('board.urls'), name='board'),
     path('' , include('board.urls'), name='index'),
     path('users/', include('users.urls')),
+    path('favicon.ico', RedirectView.as_view(url='/static/images/favicon.ico')),
 ]

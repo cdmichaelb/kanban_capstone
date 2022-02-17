@@ -5,6 +5,8 @@ from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth.views import LoginView
+
+
 from . import views
 
 app_name = 'board'
@@ -17,5 +19,9 @@ urlpatterns = [
     path('column/<int:pk>', views.column_detail, name='column_detail'),
     path('card/', views.card_create, name='card_create'),
     path('card/<int:pk>', views.card_detail, name='card_detail'),
+    path('card/delete/<int:pk>', views.card_delete, name='card_delete'),
+
+    # Favicon Error was driving me crazy
+    #path('favicon.ico', RedirectView.as_view(url='/static/images/favicon.ico')),
     
 ]

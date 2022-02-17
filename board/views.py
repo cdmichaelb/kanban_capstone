@@ -47,8 +47,6 @@ def column_create(request):
     response = Response()
     newColumn = Column(name=request.data['name'], kanban=Kanban.objects.get(id=request.data['kanban']), user=request.user)
     user = CustomUser.objects.get(id=request.user.id)
-    print(newColumn.kanban.id, "kanban")
-    print(user.id, "user")
     response.data = {
             'id': newColumn.id,
             'name': newColumn.name,
@@ -58,17 +56,13 @@ def column_create(request):
             'index': newColumn.index,
             'user': user.id
             }
-    
-    print(response.data)
     serializer = ColumnSerializer(data=response.data, many=False)
-    #print(serializer, "serializer")
     if serializer.is_valid():
         serializer.save()
         response.status_code = 201
         response.data = {
             'columns': serializer.data,
-            'column_list': ColumnSerializer(Column.objects.all(), many=True).data
-            }
+            'column_list': ColumnSerializer(Column.objects.filter(kanban=newColumn.kanban), many=True).data            }
         print(response.data, " is valid")
     else:
         print(serializer.errors)
@@ -81,7 +75,6 @@ def column_create(request):
 @api_view(['POST'])
 def card_create(request):
     response = Response()
-    print("req: ", request.data)
     newCard = Card(name=request.data['name'], description=request.data['description'], column=Column.objects.get(id=request.data['column']), user=request.user)
     
     user = CustomUser.objects.get(id=request.user.id)
@@ -100,8 +93,10 @@ def card_create(request):
         serializer.save()
         response.status_code = 201
         response.data = {
-            'cards': serializer.data, 
-            'card_list': CardSerializer(Card.objects.all(), many=True).data
+            #'cards': serializer.data,
+            'column': newCard.column.id,
+            'column_list': ColumnSerializer(Column.objects.filter(kanban=newCard.column.kanban), many=True).data,
+            'card_list': CardSerializer(Card.objects.filter(column=newCard.column), many=True).data
             }
         print(response.data, " is valid")
     else:
@@ -116,8 +111,16 @@ def card_create(request):
 def kanban(request):
     response = Response()
     kanbans = Kanban.objects.all()
+    cards = Card.objects.all()
+    columns = Column.objects.all()
     serializer = KanbanSerializer(kanbans, many=True)
-    response.data = {'kanbans': serializer.data}
+    serializer2 = CardSerializer(cards, many=True)
+    serializer3 = ColumnSerializer(columns, many=True)
+    response.data = {
+        'kanbans': serializer.data,
+        'cards': serializer2.data,
+        'columns': serializer3.data
+        }
     return response
 
 @api_view(['GET'])
@@ -142,3 +145,14 @@ def card_detail(request, pk):
     response.data = {'card_list': serializer.data}
     print(response.data)
     return Response(serializer.data)
+
+@api_view(['DELETE'])
+def card_delete(request, pk):
+    card = get_object_or_404(Card, pk=pk)
+    card.delete()
+    response.data = {'message': 'Card deleted',
+                    'card_list': CardSerializer(Card.objects.filter(column=card.column), many=True).data,
+                    'column_list': ColumnSerializer(Column.objects.filter(kanban=card.column.kanban), many=True).data,
+                    }
+    
+    return Response(response.data)

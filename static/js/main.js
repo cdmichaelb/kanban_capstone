@@ -4,16 +4,16 @@ let print = console.log; //TODO: Remove later
 $(document).ready(function () {
 	console.log("Loaded");
 	$("#kanban-detail-page").hide("fast");
-	$("#mainNavbar").toggle("fast");
+	$("#mainNavbar").show("fast");
 	$("#loginButton").click(function (event) {
 		event.preventDefault();
-		$("#loginForm").show("slow");
-		$("#registerForm").hide("slow");
+		$("#loginForm").show("fast");
+		$("#registerForm").hide("fast");
 	});
 	$("#registerButton").click(function (event) {
 		event.preventDefault();
-		$("#registerForm").show("slow");
-		$("#loginForm").hide("slow");
+		$("#registerForm").show("fast");
+		$("#loginForm").hide("fast");
 	});
 	$("#navLoginButton").click(function (event) {
 		event.preventDefault();
@@ -25,6 +25,18 @@ $(document).ready(function () {
 		$("#registerForm").show("slow");
 		$("#loginForm").hide("slow");
 	});
+	/* 	$(".loginSubmit").click(function (event) {
+		event.preventDefault();
+		console.log("Login submit");
+		//$("#kanbanApp").show("fast");
+		$("#loginForm").hide("fast");
+		$("#registerForm").hide("fast");
+	});
+	$("#kanban-list-page-kanban-button").click(function (event) {
+		event.preventDefault();
+		//$("#kanban-list-page").hide("fast");
+		$("#kanban-detail-page").show("fast");
+	}); */
 });
 
 const BASE_URL = "";
@@ -104,6 +116,7 @@ const app2 = new Vue({
 		newCardName: "",
 		newCardDescription: "",
 		kanban_count: 0,
+		componentKey: 0,
 	},
 	created: function () {
 		axios.defaults.xsrfHeaderName = "X-CSRFToken";
@@ -117,8 +130,9 @@ const app2 = new Vue({
 			url: BASE_URL + "/kanban/",
 		})
 			.then((response) => {
-				console.log(response.data);
 				this.kanbans = response.data.kanbans;
+				this.kanbans.columns = response.data.columns;
+				this.kanbans.cards = response.data.cards;
 				this.kanban_count = Object.values(response.data).length;
 			})
 			.catch((error) => {
@@ -127,7 +141,10 @@ const app2 = new Vue({
 			});
 	},
 	methods: {
-		// Add a new kanban
+		forceRerender() {
+			this.componentKey += 1;
+			//this.$forceUpdate();
+		},
 		createKanban: function () {
 			axios({
 				method: "POST",
@@ -154,10 +171,24 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					this.kanbans.columns = response.data.column_list;
-					console.log("Columns: " + this.kanbans.columns);
+					//console.log("Columns: " + JSON.stringify(this.kanbans.columns));
 
-					console.log("logging columns");
-					console.log(JSON.stringify(this.kanbans.columns));
+					/* for (let i = 0; i < this.kanbans.columns.length; i++) {
+						axios({
+							method: "GET",
+							url: BASE_URL + "/card/" + this.kanbans.columns[i].id,
+							data: {
+								column_id: this.kanbans.columns[i].id,
+							},
+						})
+							.then((response) => {
+								this.kanbans.columns[i].cards = response.data;
+							})
+							.catch((error) => {
+								console.log(BASE_URL);
+								console.log(error);
+							});
+					} */
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -173,9 +204,6 @@ const app2 = new Vue({
 				.then((response) => {
 					$("#kanban-list-page").hide("fast");
 					$("#kanban-detail-page").show("fast");
-					//this.kanbans.columns = this.getColumns(response.data.id);
-					//this.kanbans.columns.cards = this.getCards(this.kanbans.columns);
-					//console.log(response.data);
 					this.kanbans = response.data;
 					this.getColumns(kanban);
 				})
@@ -187,20 +215,6 @@ const app2 = new Vue({
 		backToList: function () {
 			$("#kanban-list-page").show("fast");
 			$("#kanban-detail-page").hide("fast");
-		},
-		getCards: function (column) {
-			axios({
-				method: "GET",
-				url: BASE_URL + "/card/" + column,
-			})
-				.then((response) => {
-					console.log(response.data);
-					this.kanbans = response.data;
-				})
-				.catch((error) => {
-					console.log(BASE_URL);
-					console.log(error);
-				});
 		},
 		createColumn: function () {
 			axios({
@@ -214,6 +228,7 @@ const app2 = new Vue({
 				},
 			})
 				.then((response) => {
+					//console.log("Column: " + JSON.stringify(response.data.column_list));
 					this.kanbans.columns = response.data.column_list;
 				})
 				.catch((error) => {
@@ -233,9 +248,11 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					console.log("card created");
-					console.log(response.data);
-					//this.kanbans = response.data;
-					this.kanbans.columns.cards = response.data.cards;
+					console.log(JSON.stringify(response.data));
+					this.kanbans.column = response.data.column;
+					this.kanbans.columns = response.data.column_list;
+					this.kanbans.columns.cards = response.data.card_list;
+					app2.$forceUpdate();
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -331,7 +348,10 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					console.log(response.data);
-					this.kanbans = response.data;
+
+					this.kanbans.columns = response.data.column_list;
+					this.kanbans.columns.cards = response.data.card_list;
+					//this.kanbans = response.data;
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
