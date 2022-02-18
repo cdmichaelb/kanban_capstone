@@ -1,9 +1,7 @@
 // Toggle display of id edit-form when edit edit-button is clicked
 let print = console.log; //TODO: Remove later
-
 $(document).ready(function () {
 	console.log("Loaded");
-	$("#kanban-detail-page").hide("fast");
 	$("#mainNavbar").show("fast");
 	$("#loginButton").click(function (event) {
 		event.preventDefault();
@@ -31,12 +29,12 @@ $(document).ready(function () {
 		//$("#kanbanApp").show("fast");
 		$("#loginForm").hide("fast");
 		$("#registerForm").hide("fast");
-	});
+	}); */
 	$("#kanban-list-page-kanban-button").click(function (event) {
 		event.preventDefault();
 		//$("#kanban-list-page").hide("fast");
 		$("#kanban-detail-page").show("fast");
-	}); */
+	});
 });
 
 const BASE_URL = "";
@@ -73,6 +71,10 @@ const app = new Vue({
 				console.log(BASE_URL);
 				console.log(error);
 			});
+	},
+	mounted() {
+		$("#loginApp").show();
+		console.log("ready");
 	},
 });
 
@@ -118,6 +120,7 @@ const app2 = new Vue({
 		kanban_count: 0,
 		componentKey: 0,
 	},
+	mounted() {},
 	created: function () {
 		axios.defaults.xsrfHeaderName = "X-CSRFToken";
 		axios.defaults.headers = {

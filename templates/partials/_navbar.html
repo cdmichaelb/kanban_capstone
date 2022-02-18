@@ -6,7 +6,7 @@
 		class="navbar show navbar-expand-md navbar-dark fixed-top bg-dark"
 		style="display: none"
 	>
-		<div class="container-fluid show">
+		<div class="container-fluid">
 			<a class="navbar-brand" href="{% url 'board:index' %}">board</a>
 
 			<button
@@ -20,7 +20,7 @@
 			>
 				<span class="navbar-toggler-icon"></span>
 			</button>
-			<div class="collapse navbar-collapse show" id="navbarCollapse">
+			<div class="collapse navbar-collapse" id="navbarCollapse">
 				<ul class="navbar-nav me-auto mb-2 mb-md-0">
 					<li class="nav-item">
 						<a
@@ -51,7 +51,7 @@
 				</ul>
 				<ul class="navbar-nav me-2">
 					{% if request.user.is_authenticated %}
-					<div class="nav-link show">Welcome {{user.username}}!</div>
+					<div class="nav-link">Welcome {{user.username}}!</div>
 					<li class="nav-item">
 						<a class="nav-link" href="{% url 'users:account' %}"> Account</a>
 					</li>

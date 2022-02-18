@@ -1,221 +1,228 @@
 {% extends 'base.html' %} {% block content %} {% load static %}
 <br /><br /><br />
 {% if request.user.is_authenticated %}
-<div id="loginApp">
+<div id="loginApp" class="d-none" v-cloak>
 	{% else %}
-	<div id="loginApp" class="show">
+	<div id="loginApp" style="display: none" v-cloak>
 		{% endif %}
-		<div class="show" v-if="user.username">
+
+		<div v-if="user.username">
 			<h2>Welcome [[user.username]]!</h2>
 		</div>
 
-		<div class="show" v-else>
-			<div class="show" id="loginForm" style="display: none">
+		<div v-else>
+			<div id="loginForm" style="display: none">
 				<p class="btn border-1 border-light" id="registerButton">Register</p>
 				{% include 'users/login.html' %}
 			</div>
-			<div class="show" id="registerForm">
+			<div id="registerForm">
 				<p class="btn border-1 border-light" id="loginButton">Login</p>
 				{% include 'users/register.html' %}
 			</div>
 		</div>
 	</div>
-	{% if request.user.is_authenticated %}
-	<div id="kanbanApp">
-		<div class="show" id="kanban-list-page">
-			<div class="show" v-if="kanban_count > 0">
-				<div class="show" v-for="kanban in kanbans">
-					<div
-						class="btn show bg-dark text-light border-1 border-light"
-						id="kanban-list-page-kanban-button"
-						v-on:click="viewKanban(kanban.id)"
-					>
-						<div class="kanban-header show">
-							<h3>[[kanban.id]]. [[kanban.name]]</h3>
-						</div>
-						<div class="kanban-body show">
-							<p>
-								[[kanban.description]]
-								<br />
-								Created at [[kanban.created_at]]. Last updated at
-								[[kanban.updated_at]].
-							</p>
-						</div>
+</div>
+{% if request.user.is_authenticated %}
+<div id="kanbanApp" v-cloak>
+	{% else %}
+	<div id="kanbanApp" class="d-none" v-cloak></div>
+	{% endif %} {% if request.user.is_authenticated %}
+
+	<div class="show" id="kanban-list-page">
+		<div class="show" v-if="kanban_count > 0">
+			<div class="show" v-for="kanban in kanbans">
+				<div
+					class="btn show bg-dark text-light border-1 border-light"
+					id="kanban-list-page-kanban-button"
+					v-on:click="viewKanban(kanban.id)"
+				>
+					<div class="kanban-header show">
+						<h3>[[kanban.id]]. [[kanban.name]]</h3>
+					</div>
+					<div class="kanban-body show">
+						<p>
+							[[kanban.description]]
+							<br />
+							Created at [[kanban.created_at]]. Last updated at
+							[[kanban.updated_at]].
+						</p>
 					</div>
 				</div>
-			</div>
-			<div v-else></div>
-			<div class="create-kanban show">
-				<h2>Create a Kanban</h2>
-				<form>
-					<div class="form-group show">
-						<label for="kanban-name">Kanban Name</label>
-						<input
-							type="text"
-							class="form-control"
-							id="kanban-name"
-							name="name"
-							placeholder="Kanban Name"
-							v-model="newName"
-						/>
-					</div>
-					<div class="form-group show">
-						<label for="kanban-description">Kanban Description</label>
-						<textarea
-							class="form-control"
-							id="kanban-description"
-							name="description"
-							rows="3"
-							v-model="newDescription"
-						></textarea>
-					</div>
-					<button
-						type="submit"
-						class="btn btn-primary"
-						id="create-kanban-button"
-						v-on:click.prevent="createKanban"
-					>
-						Create Kanban
-					</button>
-				</form>
 			</div>
 		</div>
-		<div id="kanban-detail-page">
-			<div class="card">
-				<h2>[[kanbans.name]]</h2>
-				<div class="card-body">
-					<h5 class="card-title">[[kanbans.description]]</h5>
-					<p class="card-text">
-						<!-- Created at [[kanbans.created_at]]. Last updated at
-					[[kanbans.updated_at]]. -->
-					</p>
+		<div v-else></div>
+		<div class="create-kanban show">
+			<h2>Create a Kanban</h2>
+			<form>
+				<div class="form-group show">
+					<label for="kanban-name">Kanban Name</label>
+					<input
+						type="text"
+						class="form-control"
+						id="kanban-name"
+						name="name"
+						placeholder="Kanban Name"
+						v-model="newName"
+					/>
 				</div>
+				<div class="form-group show">
+					<label for="kanban-description">Kanban Description</label>
+					<textarea
+						class="form-control"
+						id="kanban-description"
+						name="description"
+						rows="3"
+						v-model="newDescription"
+					></textarea>
+				</div>
+				<button
+					type="submit"
+					class="btn btn-primary"
+					id="create-kanban-button"
+					v-on:click.prevent="createKanban"
+				>
+					Create Kanban
+				</button>
+			</form>
+		</div>
+	</div>
+	<div id="kanban-detail-page" style="display: none">
+		<div class="card">
+			<h2>[[kanbans.name]]</h2>
+			<div class="card-body">
+				<h5 class="card-title">[[kanbans.description]]</h5>
+				<p class="card-text">
+					<!-- Created at [[kanbans.created_at]]. Last updated at
+					[[kanbans.updated_at]]. -->
+				</p>
 			</div>
-			<!-- create column -->
-			<div class="create-column">
-				<h2>Create a Column</h2>
-				<form>
-					<div class="form-group">
-						<label for="column-name">Column Name</label>
-						<input
-							type="text"
-							class="form-control"
-							id="column-name"
-							name="name"
-							placeholder="Column Name"
-							v-model="newColumnName"
-						/>
+		</div>
+		<!-- create column -->
+
+		<div class="create-column">
+			<h2>Create a Column</h2>
+			<form>
+				<div class="form-group">
+					<label for="column-name">Column Name</label>
+					<input
+						type="text"
+						class="form-control"
+						id="column-name"
+						name="name"
+						placeholder="Column Name"
+						v-model="newColumnName"
+					/>
+				</div>
+				<div class="form-group">
+					<label for="column-description">Column Description</label>
+					<textarea
+						class="form-control"
+						id="column-description"
+						name="description"
+						rows="3"
+						v-model="newColumnDescription"
+					></textarea>
+				</div>
+				<button
+					type="submit"
+					class="btn btn-primary"
+					v-on:click.prevent="createColumn"
+				>
+					Create Column
+				</button>
+			</form>
+		</div>
+		<!-- List columns -->
+		<div class="column-list row">
+			<div v-for="column in kanbans.columns" class="col">
+				<div class="card bg-dark text-light border-1 border-light">
+					<div class="column-header">
+						<h3 class="text-center">[[column.name]]</h3>
 					</div>
-					<div class="form-group">
-						<label for="column-description">Column Description</label>
-						<textarea
-							class="form-control"
-							id="column-description"
-							name="description"
-							rows="3"
-							v-model="newColumnDescription"
-						></textarea>
-					</div>
-					<button
-						type="submit"
-						class="btn btn-primary"
-						v-on:click.prevent="createColumn"
-					>
-						Create Column
-					</button>
-				</form>
-			</div>
-			<!-- List columns -->
-			<div class="column-list">
-				<div v-for="column in kanbans.columns">
-					<div class="btn bg-dark text-light border-1 border-light">
-						<div class="column-header">
-							<h3>[[column.id]]. [[column.name]]</h3>
-						</div>
-						<div class="column-body">
-							<p>
-								[[column.description]]
-								<br />
-								<!-- Created at [[column.created_at]]. Last updated at
+					<div class="column-body">
+						<p>
+							[[column.description]]
+							<br />
+							<!-- Created at [[column.created_at]]. Last updated at
 							[[column.updated_at]]. -->
-							</p>
-							<div class="cards">
-								<div v-for="card in column.cards">
-									<div
-										:id="card"
-										class="btn bg-light text-dark border-1 border-light"
-									>
-										<div :id="card" class="card-header">
-											<h3 :id="card">[[card.id]]. [[card.name]]</h3>
-										</div>
-										<div :id="card" class="card-body">
-											<p :id="card">
-												[[card.description]]
-												<br />
-												<!-- Created at [[card.created_at]]. Last updated at
+						</p>
+						<div class="cards">
+							<div v-for="card in column.cards" class="row">
+								<div
+									:id="card"
+									class="btn bg-light text-dark border-1 border-light col"
+								>
+									<div :id="card" class="card-header">
+										<h3 :id="card">[[card.name]]</h3>
+									</div>
+									<div :id="card" class="card-body">
+										<p :id="card">
+											[[card.description]]
+											<br />
+											<!-- Created at [[card.created_at]]. Last updated at
 											[[card.updated_at]]. -->
-												<!-- show delete and edit buttons -->
-												<button
-													:id="card"
-													class="btn btn-danger"
-													v-on:click.prevent="deleteCard(card.id)"
-												>
-													Delete
-												</button>
-												<button
-													:id="card"
-													class="btn btn-primary"
-													v-on:click.prevent="editCard(card.id)"
-												>
-													Edit
-												</button>
-											</p>
-										</div>
+											<!-- show delete and edit buttons -->
+											<button
+												:id="card"
+												class="btn btn-danger"
+												v-on:click.prevent="deleteCard(card.id)"
+											>
+												Delete
+											</button>
+											<button
+												:id="card"
+												class="btn btn-primary"
+												v-on:click.prevent="editCard(card.id)"
+											>
+												Edit
+											</button>
+										</p>
 									</div>
 								</div>
 							</div>
-							<!-- create card -->
-							<div :id="column" class="create-card">
-								<h2>Create a Card</h2>
-								<form :id="column">
-									<div :id="column" class="form-group">
-										<label :id="column" for="card-name">Card Name</label>
-										<input
-											type="text"
-											class="form-control"
-											:id="column"
-											name="name"
-											placeholder="Card Name"
-											v-model="newCardName"
-										/>
-									</div>
-									<div :id="column" class="form-group">
-										<label :id="column" for="card-description"
-											>Card Description</label
-										>
-										<textarea
-											class="form-control"
-											:id="column"
-											name="description"
-											rows="3"
-											v-model="newCardDescription"
-										></textarea>
-									</div>
-									<button
+						</div>
+						<!-- create card -->
+						<div :id="column" class="create-card">
+							<h2>Create a Card</h2>
+							<form :id="column">
+								<div :id="column" class="form-group">
+									<label :id="column" for="card-name">Card Name</label>
+									<input
+										type="text"
+										class="form-control"
 										:id="column"
-										type="submit"
-										class="btn btn-primary"
-										v-on:click.prevent="createCard(column.id)"
+										name="name"
+										placeholder="Card Name"
+										v-model="newCardName"
+									/>
+								</div>
+								<div :id="column" class="form-group">
+									<label :id="column" for="card-description"
+										>Card Description</label
 									>
-										Create Card
-									</button>
-								</form>
-							</div>
+									<textarea
+										class="form-control"
+										:id="column"
+										name="description"
+										rows="3"
+										v-model="newCardDescription"
+									></textarea>
+								</div>
+								<button
+									:id="column"
+									type="submit"
+									class="btn btn-primary"
+									v-on:click.prevent="createCard(column.id)"
+								>
+									Create Card
+								</button>
+							</form>
 						</div>
 					</div>
 				</div>
+				<!-- End of Columns--><br />
 			</div>
 		</div>
-		{% endif %} {% csrf_token %} {% endblock %}
 	</div>
+	{% endif %} {% csrf_token %} {% endblock %}
 </div>

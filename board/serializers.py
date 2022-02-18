@@ -1,8 +1,5 @@
-from email.policy import default
 from rest_framework import serializers
 from .models import *
-from users.serializers import UserDetailSerializer
-from users.models import CustomUser
 
 class CardSerializer(serializers.ModelSerializer):
     class Meta:
