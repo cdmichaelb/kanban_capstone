@@ -93,6 +93,7 @@ const app2 = new Vue({
 			columns: [
 				{
 					id: "{{column.id}}",
+					column_index: "{{column.column_index}}",
 					name: "{{column.name}}",
 					description: "{{column.description}}",
 					created_by: "{{column.created_by}}",
@@ -101,6 +102,7 @@ const app2 = new Vue({
 					cards: [
 						{
 							id: "{{card.id}}",
+							index: "{{card.index}}",
 							name: "{{card.name}}",
 							description: "{{card.description}}",
 							created_by: "{{card.created_by}}",
@@ -133,9 +135,10 @@ const app2 = new Vue({
 			url: BASE_URL + "/kanban/",
 		})
 			.then((response) => {
-				this.kanbans = response.data.kanbans;
+				this.kanbans = response.data.kanbans_list;
 				this.kanbans.columns = response.data.columns;
-				this.kanbans.cards = response.data.cards;
+				this.kanbans.cards = response.data.card_list;
+				this.kanbans.columns.cards = response.data.card_list;
 				this.kanban_count = Object.values(response.data).length;
 			})
 			.catch((error) => {
@@ -144,6 +147,43 @@ const app2 = new Vue({
 			});
 	},
 	methods: {
+		deleteKanban: function (kanban_id) {
+			axios({
+				method: "DELETE",
+				url: BASE_URL + "/kanban/delete/" + kanban_id,
+			})
+				.then((response) => {
+					console.log("deleted");
+					this.kanbans = response.data.kanbans_list;
+					this.kanbans.columns = response.data.column_list;
+					this.kanbans.cards = response.data.card_list;
+					this.kanbans.columns.cards = response.data.card_list;
+					this.kanban_count = Object.values(response.data.kanbans_list).length;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+		moveCard: function (card_id, direction) {
+			axios({
+				method: "PUT",
+				url: BASE_URL + "/card/move/" + card_id,
+				data: {
+					direction: direction,
+				},
+			})
+				.then((response) => {
+					console.log("moved");
+					console.log(response.data.column_list);
+					this.kanbans.columns = response.data.column_list;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
+
 		forceRerender() {
 			this.componentKey += 1;
 			//this.$forceUpdate();
@@ -159,6 +199,7 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					this.kanbans = response.data.kanban_list;
+					this.kanbans.columns = [];
 					this.kanban_count = Object.values(response.data).length;
 					this.kanban_count = this.kanban_count + 1;
 				})
@@ -174,24 +215,6 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					this.kanbans.columns = response.data.column_list;
-					//console.log("Columns: " + JSON.stringify(this.kanbans.columns));
-
-					/* for (let i = 0; i < this.kanbans.columns.length; i++) {
-						axios({
-							method: "GET",
-							url: BASE_URL + "/card/" + this.kanbans.columns[i].id,
-							data: {
-								column_id: this.kanbans.columns[i].id,
-							},
-						})
-							.then((response) => {
-								this.kanbans.columns[i].cards = response.data;
-							})
-							.catch((error) => {
-								console.log(BASE_URL);
-								console.log(error);
-							});
-					} */
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -228,11 +251,13 @@ const app2 = new Vue({
 					description: this.newColumnDescription,
 					kanban: this.kanbans.id,
 					column: this.kanbans.columns.id,
+					column_index: this.kanbans.columns.length,
 				},
 			})
 				.then((response) => {
 					//console.log("Column: " + JSON.stringify(response.data.column_list));
 					this.kanbans.columns = response.data.column_list;
+					this.kanbans.columns.cards = response.data.card_list;
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -306,20 +331,6 @@ const app2 = new Vue({
 					name: this.newName,
 					description: this.newDescription,
 				},
-			})
-				.then((response) => {
-					console.log(response.data);
-					this.kanbans = response.data;
-				})
-				.catch((error) => {
-					console.log(BASE_URL);
-					console.log(error);
-				});
-		},
-		deleteKanban: function (kanban) {
-			axios({
-				method: "DELETE",
-				url: BASE_URL + "/delete/" + kanban,
 			})
 				.then((response) => {
 					console.log(response.data);

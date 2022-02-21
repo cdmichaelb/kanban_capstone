@@ -28,18 +28,25 @@
 	<div id="kanbanApp" class="d-none" v-cloak></div>
 	{% endif %} {% if request.user.is_authenticated %}
 
-	<div class="show" id="kanban-list-page">
-		<div class="show" v-if="kanban_count > 0">
-			<div class="show" v-for="kanban in kanbans">
+	<div class="" id="kanban-list-page">
+		<div class="" v-if="kanban_count > 0">
+			<div class="" v-for="kanban in kanbans">
 				<div
-					class="btn show bg-dark text-light border-1 border-light"
+					class="btn bg-dark text-light border-1 border-light"
 					id="kanban-list-page-kanban-button"
 					v-on:click="viewKanban(kanban.id)"
 				>
-					<div class="kanban-header show">
-						<h3>[[kanban.id]]. [[kanban.name]]</h3>
+					<div class="kanban-header">
+						<h3>[[kanban.name]]</h3>
+						<!-- Delete Button with Trash icon -->
+						<div class="kanban-header-delete-button">
+							<i
+								class="fa-solid fa-trash-can"
+								v-on:click="deleteKanban(kanban.id)"
+							></i>
+						</div>
 					</div>
-					<div class="kanban-body show">
+					<div class="kanban-body">
 						<p>
 							[[kanban.description]]
 							<br />
@@ -51,10 +58,10 @@
 			</div>
 		</div>
 		<div v-else></div>
-		<div class="create-kanban show">
+		<div class="create-kanban">
 			<h2>Create a Kanban</h2>
 			<form>
-				<div class="form-group show">
+				<div class="form-group">
 					<label for="kanban-name">Kanban Name</label>
 					<input
 						type="text"
@@ -65,7 +72,7 @@
 						v-model="newName"
 					/>
 				</div>
-				<div class="form-group show">
+				<div class="form-group">
 					<label for="kanban-description">Kanban Description</label>
 					<textarea
 						class="form-control"
@@ -133,11 +140,13 @@
 			</form>
 		</div>
 		<!-- List columns -->
-		<div class="column-list row">
-			<div v-for="column in kanbans.columns" class="col">
+		<div v-if="kanbans.columns !== null" class="column-list row">
+			<div v-for="column in kanbans.columns.slice().reverse()" class="col">
 				<div class="card bg-dark text-light border-1 border-light">
 					<div class="column-header">
-						<h3 class="text-center">[[column.name]]</h3>
+						<h3 class="text-center">
+							[[column.index]] . [[column.name]] . [[column.id]]
+						</h3>
 					</div>
 					<div class="column-body">
 						<p>
@@ -154,6 +163,22 @@
 								>
 									<div :id="card" class="card-header">
 										<h3 :id="card">[[card.name]]</h3>
+										<!-- Move Card up to next Column -->
+										<button
+											:id="card"
+											class="btn btn-primary"
+											v-on:click.prevent="moveCard(card.id, 'increase')"
+										>
+											<i class="fas fa-arrow-up"></i>
+										</button>
+										<!-- Move Card down to next Column -->
+										<button
+											:id="card"
+											class="btn btn-primary"
+											v-on:click.prevent="moveCard(card.id, 'decrease')"
+										>
+											<i class="fas fa-arrow-down"></i>
+										</button>
 									</div>
 									<div :id="card" class="card-body">
 										<p :id="card">

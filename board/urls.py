@@ -20,5 +20,12 @@ urlpatterns = [
     path('card/', views.card_create, name='card_create'),
     path('card/<int:pk>', views.card_detail, name='card_detail'),
     path('card/delete/<int:pk>', views.card_delete, name='card_delete'),
-    
+    path('column/delete/<int:pk>', views.column_delete, name='column_delete'),
+    path('kanban/delete/<int:pk>', views.kanban_delete, name='kanban_delete'),
+    path('kanban/edit/<int:pk>', views.kanban_update, name='kanban_update'),
+    path('column/edit/<int:pk>', views.column_update, name='column_update'),
+    path('card/edit/<int:pk>', views.card_update, name='card_update'),
+    #path('kanban/move/<int:pk>', views.kanban_move, name='kanban_move'),
+    path('column/move/<int:pk>', views.column_move, name='column_move'),
+    path('card/move/<int:pk>', views.card_move, name='card_move'),
 ]
