@@ -311,55 +311,9 @@ def card_move(request, pk):
             'column_list': ColumnSerializer(Column.objects.filter(kanban=card.column.kanban), many=True).data,
             'kanban_list': KanbanSerializer(Kanban.objects.filter(user=request.user), many=True).data,
             }
-        
-        """
-                        this.kanbans = response.data.kanbans_list;
-                        this.kanbans.columns = response.data.column_list;
-                        this.kanbans.cards = response.data.card_list;
-                        this.kanbans.columns.cards = response.data.card_list;
-                        this.kanban_count = Object.values(response.data.kanbans_list).length;
-        """
-        #print(response.data, " is valid")
     else:
         response.status_code = 400
         response.data = {'message': 'Card could not be updated'}
         print(response.data, " is not valid")
 
     return Response(response.data)
-
-    
-"""     card = get_object_or_404(Card, pk=pk)
-    card = CardSerializer(Card.objects.filter(id=pk), many=True).data
-    print("card: ", card)
-    column = ColumnSerializer(Column.objects.filter(id=request.data['column_id']), many=True).data
-    print("column: ", column)
-    newIndex = int(column[0]['index']) + 1
-    print("newIndex: ", newIndex)
-    print("column[0]['kanban']", column[0]['kanban'])
-    print(ColumnSerializer(Column.objects.filter(kanban=column[0]['kanban'])))
-    newColumn = ColumnSerializer(Column.objects.filter(kanban=column[0]['kanban']), many=True).data
-    
-    print("new column: ", newColumn)
-    print("newColumn 0: ", newColumn[0]['index'])
-    print("newColumn 1: ", newColumn[1]['index'])
-    print("newColumn 2: ", newColumn[2]['index'])
-    # Print column of card """
-    
-"""     serializer = CardSerializer(data=response.data)
-    
-    if serializer.is_valid():
-        serializer.save()
-        response.status_code = 201
-        response.data = {
-            'card': serializer.data,
-            'card_list': CardSerializer(Card.objects.filter(column=card.column), many=True).data,
-            'column_list': ColumnSerializer(Column.objects.filter(kanban=card.column.kanban), many=True).data,
-            }
-        print(response.data, " is valid")
-    else:
-        print(serializer.errors)
-        response.status_code = 400
-        response.data = {'message': 'Card could not be updated'}
-        print(response.data, " is not valid")
-    
-    return Response(response.data) """
