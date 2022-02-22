@@ -35,6 +35,24 @@ $(document).ready(function () {
 		//$("#kanban-list-page").hide("fast");
 		$("#kanban-detail-page").show("fast");
 	});
+
+	$("#kanban-header-delete-icon").click(function (event) {
+		event.stopPropagation();
+		event.preventDefault();
+		console.log("mouseover");
+		$("#kanban-list-page-kanban-button").prop("disabled", true);
+	});
+	// If button with class of create is clicked, show the create form with same id
+	$(".createA").click(function (event) {
+		event.preventDefault();
+		console.log("Create button clicked " + $(this).attr("idn"));
+		console.log("#" + "create-form-div-" + $(this).attr("idn"));
+		$("#" + "create-form-div-" + $(this).attr("idn")).toggle("fast");
+		//console.log current display
+		console.log(
+			$("#" + "create-form-div-" + $(this).attr("idn")).css("display")
+		);
+	});
 });
 
 const BASE_URL = "";
@@ -129,7 +147,7 @@ const app2 = new Vue({
 			"Content-Type": "application/json",
 			"X-CSRFToken": this.csrfToken.value,
 		};
-		console.log("created");
+		console.log("created 2");
 		axios({
 			method: "GET",
 			url: BASE_URL + "/kanban/",
@@ -154,11 +172,8 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					console.log("deleted");
-					this.kanbans = response.data.kanbans_list;
-					this.kanbans.columns = response.data.column_list;
-					this.kanbans.cards = response.data.card_list;
-					this.kanbans.columns.cards = response.data.card_list;
-					this.kanban_count = Object.values(response.data.kanbans_list).length;
+					console.log(response);
+					this.kanbans = response.data.kanban_list;
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -183,10 +198,28 @@ const app2 = new Vue({
 					console.log(error);
 				});
 		},
-
+		moveColumn: function (column_id, direction) {
+			axios({
+				method: "PUT",
+				url: BASE_URL + "/column/move/" + column_id,
+				data: {
+					direction: direction,
+				},
+			})
+				.then((response) => {
+					console.log("moved");
+					console.log(response.data.column_list);
+					this.kanbans.columns = response.data.column_list;
+				})
+				.catch((error) => {
+					console.log(BASE_URL);
+					console.log(error);
+				});
+		},
 		forceRerender() {
+			// Not needed.
 			this.componentKey += 1;
-			//this.$forceUpdate();
+			this.$forceUpdate();
 		},
 		createKanban: function () {
 			axios({
@@ -280,7 +313,7 @@ const app2 = new Vue({
 					this.kanbans.column = response.data.column;
 					this.kanbans.columns = response.data.column_list;
 					this.kanbans.columns.cards = response.data.card_list;
-					app2.$forceUpdate();
+					//app2.$forceUpdate();
 				})
 				.catch((error) => {
 					console.log(BASE_URL);

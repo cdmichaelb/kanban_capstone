@@ -29,20 +29,24 @@
 	{% endif %} {% if request.user.is_authenticated %}
 
 	<div class="" id="kanban-list-page">
-		<div class="" v-if="kanban_count > 0">
-			<div class="" v-for="kanban in kanbans">
+		<div class="row" v-if="kanban_count > 0">
+			<div class="col" v-for="kanban in kanbans">
 				<div
 					class="btn bg-dark text-light border-1 border-light"
 					id="kanban-list-page-kanban-button"
-					v-on:click="viewKanban(kanban.id)"
+					v-on:click.stop.prevent="viewKanban(kanban.id)"
 				>
 					<div class="kanban-header">
 						<h3>[[kanban.name]]</h3>
 						<!-- Delete Button with Trash icon -->
-						<div class="kanban-header-delete-button">
+						<div
+							class="kanban-header-delete-button"
+							id="kanban-header-delete-button"
+						>
 							<i
+								id="kanban-header-delete-icon"
 								class="fa-solid fa-trash-can"
-								v-on:click="deleteKanban(kanban.id)"
+								v-on:click.stop.prevent="deleteKanban(kanban.id)"
 							></i>
 						</div>
 					</div>
@@ -50,8 +54,8 @@
 						<p>
 							[[kanban.description]]
 							<br />
-							Created at [[kanban.created_at]]. Last updated at
-							[[kanban.updated_at]].
+							<!-- Created at [[kanban.created_at]]. Last updated at
+							[[kanban.updated_at]]. -->
 						</p>
 					</div>
 				</div>
@@ -141,7 +145,7 @@
 		</div>
 		<!-- List columns -->
 		<div v-if="kanbans.columns !== null" class="column-list row">
-			<div v-for="column in kanbans.columns.slice().reverse()" class="col">
+			<div v-for="column in kanbans.columns" class="col">
 				<div class="card bg-dark text-light border-1 border-light">
 					<div class="column-header">
 						<h3 class="text-center">
@@ -161,24 +165,30 @@
 									:id="card"
 									class="btn bg-light text-dark border-1 border-light col"
 								>
-									<div :id="card" class="card-header">
-										<h3 :id="card">[[card.name]]</h3>
-										<!-- Move Card up to next Column -->
-										<button
-											:id="card"
-											class="btn btn-primary"
-											v-on:click.prevent="moveCard(card.id, 'increase')"
-										>
-											<i class="fas fa-arrow-up"></i>
-										</button>
-										<!-- Move Card down to next Column -->
-										<button
-											:id="card"
-											class="btn btn-primary"
-											v-on:click.prevent="moveCard(card.id, 'decrease')"
-										>
-											<i class="fas fa-arrow-down"></i>
-										</button>
+									<div :id="card" class="card-header row">
+										<div class="col">
+											<!-- Move Card down to next Column -->
+											<button
+												:id="card"
+												class="btn-sm btn-primary"
+												v-on:click.prevent="moveCard(card.id, 'decrease')"
+											>
+												<i class="fas fa-arrow-left"></i>
+											</button>
+										</div>
+										<div class="col">
+											<h4 :id="card">[[card.name]]</h4>
+										</div>
+										<div class="col">
+											<!-- Move Card up to next Column -->
+											<button
+												:id="card"
+												class="btn-sm btn-primary"
+												v-on:click.prevent="moveCard(card.id, 'increase')"
+											>
+												<i class="fas fa-arrow-right"></i>
+											</button>
+										</div>
 									</div>
 									<div :id="card" class="card-body">
 										<p :id="card">
@@ -187,35 +197,35 @@
 											<!-- Created at [[card.created_at]]. Last updated at
 											[[card.updated_at]]. -->
 											<!-- show delete and edit buttons -->
-											<button
-												:id="card"
-												class="btn btn-danger"
-												v-on:click.prevent="deleteCard(card.id)"
-											>
-												Delete
-											</button>
-											<button
-												:id="card"
-												class="btn btn-primary"
-												v-on:click.prevent="editCard(card.id)"
-											>
-												Edit
-											</button>
 										</p>
+										<button
+											:id="'delete-' + card.id"
+											class="btn btn-danger"
+											v-on:click.prevent="deleteCard(card.id)"
+										>
+											Delete
+										</button>
+										<button
+											:id="'createrbtn-' + card.id"
+											:idn="card.id"
+											class="btn btn-primary"
+										>
+											Create
+										</button>
 									</div>
 								</div>
 							</div>
 						</div>
 						<!-- create card -->
-						<div :id="column" class="create-card">
+						<div :id="'create-form-div-' + column.id" class="create-card">
 							<h2>Create a Card</h2>
-							<form :id="column">
+							<form :id="'create-card-' + column.id">
 								<div :id="column" class="form-group">
 									<label :id="column" for="card-name">Card Name</label>
 									<input
 										type="text"
 										class="form-control"
-										:id="column"
+										:id="'card-name-' + column.id"
 										name="name"
 										placeholder="Card Name"
 										v-model="newCardName"
@@ -227,14 +237,14 @@
 									>
 									<textarea
 										class="form-control"
-										:id="column"
+										:id="'card-description-' + column.id"
 										name="description"
 										rows="3"
 										v-model="newCardDescription"
 									></textarea>
 								</div>
 								<button
-									:id="column"
+									:id="'createbtn-' + column.id"
 									type="submit"
 									class="btn btn-primary"
 									v-on:click.prevent="createCard(column.id)"

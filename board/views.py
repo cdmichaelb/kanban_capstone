@@ -110,6 +110,12 @@ def card_create(request):
 @api_view(['GET'])
 def kanban(request):
     response = Response()
+    if request.user.id == None:
+        
+        response.status_code = 401
+        response.data = {'message': 'User not logged in.'}
+        return response
+    
     kanbans = Kanban.objects.filter(user=request.user)
     cards = Card.objects.all()
     columns = Column.objects.all()
@@ -154,7 +160,7 @@ def card_delete(request, pk):
                     'card_list': CardSerializer(Card.objects.filter(column=card.column), many=True).data,
                     'column_list': ColumnSerializer(Column.objects.filter(kanban=card.column.kanban), many=True).data,
                     }
-    
+
     return Response(response.data)
 
 @api_view(['DELETE'])
@@ -164,7 +170,7 @@ def column_delete(request, pk):
     response.data = {'message': 'Column deleted',
                     'column_list': ColumnSerializer(Column.objects.filter(kanban=column.kanban), many=True).data,
                     }
-    
+
     return Response(response.data)
 
 @api_view(['DELETE'])
@@ -172,11 +178,11 @@ def kanban_delete(request, pk):
     print("Kanban delete ", pk)
     kanban = get_object_or_404(Kanban, pk=pk)
     kanban.delete()
-    response.data = {'message': 'Kanban deleted',
+    response.data = {
                     'kanban_list': KanbanSerializer(Kanban.objects.filter(user=request.user), many=True).data,
-                    'column_list': ColumnSerializer(Column.objects.filter(kanban=kanban), many=True).data,
-                    'card_list': CardSerializer(Card.objects.filter(column__in=Column.objects.filter(kanban=kanban)), many=True).data,
-                    
+                    #'column_list': ColumnSerializer(Column.objects.filter(kanban=kanban), many=True).data,
+                    #'card_list': CardSerializer(Card.objects.filter(column__in=Column.objects.filter(kanban=kanban)), many=True).data,
+                    'message': 'Kanban deleted',
                     }
     
     return Response(response.data)
@@ -276,20 +282,29 @@ def card_move(request, pk):
         print("s column id ", card.column.id)
         print("s column index ", card.column.index)
         print("card index: ", card.index)
-        if data['direction'] == 'increase':
-            if card.index >= len(columns):
+        card.index = column.index
+        if data['direction'] == 'decrease':
+            if card.index >= len(columns)-1:
                 response.status_code = 400
-                response.data = {'message': 'Card could not be moved'}
+                response.data = {
+                    'message': 'Card could not be moved',
+                    'column_list': ColumnSerializer(Column.objects.filter(kanban=card.column.kanban), many=True).data,
+                }
                 print("Card could not be moved")
                 return Response(response.data)
-            card.index += 1
-        elif data['direction'] == 'decrease':
+            else:
+                card.index += 1
+        elif data['direction'] == 'increase':
             if card.index <= 0:
                 response.status_code = 400
-                response.data = {'message': 'Card could not be moved'}
+                response.data = {
+                    'message': 'Card could not be moved',
+                    'column_list': ColumnSerializer(Column.objects.filter(kanban=card.column.kanban), many=True).data,
+                }
                 print("Card could not be moved")
                 return Response(response.data)
-            card.index -= 1
+            else:
+                card.index -= 1
         print("card index2: ", card.index)
         for colu in columns:
             print ("column index ", colu.index)
@@ -306,14 +321,57 @@ def card_move(request, pk):
         card.save()
         response.status_code = 201
         response.data = {
-            'card': CardSerializer(card).data,
-            'card_list': CardSerializer(Card.objects.filter(column=card.column), many=True).data,
             'column_list': ColumnSerializer(Column.objects.filter(kanban=card.column.kanban), many=True).data,
-            'kanban_list': KanbanSerializer(Kanban.objects.filter(user=request.user), many=True).data,
             }
     else:
         response.status_code = 400
         response.data = {'message': 'Card could not be updated'}
+        print(response.data, " is not valid")
+
+    return Response(response.data)
+
+@api_view(['PUT'])
+def column_index(request, pk):
+    column = get_object_or_404(Column, pk=pk)
+    data = request.data
+    qs = Column.objects.filter(pk=pk)
+    if qs.exists():
+        column = qs.first()
+        columns = Column.objects.filter(kanban=column.kanban)
+        print(columns)
+        print("s column id ", column.id)
+        print("s column index ", column.index)
+        print("card index: ", data['index'])
+        if data['index'] >= len(columns):
+            response.status_code = 400
+            response.data = {'message': 'Column could not be moved'}
+            print("Column could not be moved")
+            return Response(response.data)
+        else:
+            column.index = data['index']
+        print("card index2: ", column.index)
+        for colu in columns:
+            print ("column index ", colu.index)
+            print ("column id ", colu.id)
+            print("---------------------------------")
+            if column.index == colu.index:
+                print("match column id ", column.id)
+                print("match colu id ", colu.id)
+                print("match colu index ", colu.index)
+                print("match card index ", column.index)
+                
+                column.index = colu.index
+        print(column.index)
+        column.save()
+        response.status_code = 201
+        response.data = {
+            'column': ColumnSerializer(column).data,
+            'column_list': ColumnSerializer(Column.objects.filter(kanban=column.kanban), many=True).data,
+            'kanban_list': KanbanSerializer(Kanban.objects.filter(user=request.user), many=True).data,
+            }
+    else:
+        response.status_code = 400
+        response.data = {'message': 'Column could not be updated'}
         print(response.data, " is not valid")
 
     return Response(response.data)
