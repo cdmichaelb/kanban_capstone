@@ -26,6 +26,6 @@ urlpatterns = [
     path('column/edit/<int:pk>', views.column_update, name='column_update'),
     path('card/edit/<int:pk>', views.card_update, name='card_update'),
     #path('kanban/move/<int:pk>', views.kanban_move, name='kanban_move'),
-    path('column/move/<int:pk>', views.column_move, name='column_move'),
+    path('column/move/<int:pk>', views.column_index, name='column_index'),
     path('card/move/<int:pk>', views.card_move, name='card_move'),
 ]

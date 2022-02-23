@@ -31,7 +31,6 @@ def kanban_create(request):
         serializer.save()
         response.status_code = 201
         response.data = {
-            'kanbans': serializer.data,
             'kanban_list': KanbanSerializer(Kanban.objects.filter(user=request.user), many=True).data
             }  
     else:
@@ -60,7 +59,6 @@ def column_create(request):
         serializer.save()
         response.status_code = 201
         response.data = {
-            'columns': serializer.data,
             'column_list': ColumnSerializer(Column.objects.filter(kanban=newColumn.kanban), many=True).data            }
         print(response.data, " is valid")
     else:
@@ -93,10 +91,7 @@ def card_create(request):
         serializer.save()
         response.status_code = 201
         response.data = {
-            #'cards': serializer.data,
-            'column': newCard.column.id,
             'column_list': ColumnSerializer(Column.objects.filter(kanban=newCard.column.kanban), many=True).data,
-            'card_list': CardSerializer(Card.objects.filter(column=newCard.column), many=True).data
             }
         print(response.data, " is valid")
     else:
@@ -116,16 +111,8 @@ def kanban(request):
         response.data = {'message': 'User not logged in.'}
         return response
     
-    kanbans = Kanban.objects.filter(user=request.user)
-    cards = Card.objects.all()
-    columns = Column.objects.all()
-    serializer = KanbanSerializer(kanbans, many=True)
-    serializer2 = CardSerializer(cards, many=True)
-    serializer3 = ColumnSerializer(columns, many=True)
     response.data = {
-        'kanbans_list': serializer.data,
-        'card_list': serializer2.data,
-        'columns': serializer3.data
+        'kanbans_list': KanbanSerializer(Kanban.objects.filter(user=request.user), many=True).data,
         }
     return response
 
@@ -156,9 +143,9 @@ def card_detail(request, pk):
 def card_delete(request, pk):
     card = get_object_or_404(Card, pk=pk)
     card.delete()
-    response.data = {'message': 'Card deleted',
-                    'card_list': CardSerializer(Card.objects.filter(column=card.column), many=True).data,
+    response.data = {
                     'column_list': ColumnSerializer(Column.objects.filter(kanban=card.column.kanban), many=True).data,
+                    'message': 'Card deleted',
                     }
 
     return Response(response.data)
@@ -167,8 +154,16 @@ def card_delete(request, pk):
 def column_delete(request, pk):
     column = get_object_or_404(Column, pk=pk)
     column.delete()
-    response.data = {'message': 'Column deleted',
-                    'column_list': ColumnSerializer(Column.objects.filter(kanban=column.kanban), many=True).data,
+    columns = Column.objects.filter(kanban=column.kanban)
+    i = 0
+    for column in columns[::-1]:
+        column.index = i
+        i += 1
+        column.save()
+    
+    response.data = {
+                    'column_list': ColumnSerializer(Column.objects.filter(kanban=column.kanban.id), many=True).data,
+                    'message': 'Column deleted',
                     }
 
     return Response(response.data)
@@ -180,8 +175,6 @@ def kanban_delete(request, pk):
     kanban.delete()
     response.data = {
                     'kanban_list': KanbanSerializer(Kanban.objects.filter(user=request.user), many=True).data,
-                    #'column_list': ColumnSerializer(Column.objects.filter(kanban=kanban), many=True).data,
-                    #'card_list': CardSerializer(Card.objects.filter(column__in=Column.objects.filter(kanban=kanban)), many=True).data,
                     'message': 'Kanban deleted',
                     }
     
@@ -249,27 +242,6 @@ def kanban_update(request, pk):
     return Response(response.data)
 
 @api_view(['PUT'])
-def column_move(request, pk):
-    column = get_object_or_404(Column, pk=pk)
-    
-    serializer = ColumnSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-        response.status_code = 201
-        response.data = {
-            'column': serializer.data,
-            'column_list': ColumnSerializer(Column.objects.filter(kanban=column.kanban), many=True).data,
-            }
-        print(response.data, " is valid")
-    else:
-        print(serializer.errors)
-        response.status_code = 400
-        response.data = {'message': 'Column could not be updated'}
-        print(response.data, " is not valid")
-    
-    return Response(response.data)
-
-@api_view(['PUT'])
 def card_move(request, pk):
     data = request.data
     qs = Card.objects.filter(pk=pk)
@@ -278,11 +250,17 @@ def card_move(request, pk):
         card = qs.first()
         column = Column.objects.filter(pk=card.column.id).first()
         columns = Column.objects.filter(kanban=column.kanban)
+        kanban = Kanban.objects.filter(pk=column.kanban.id).first()
         print(columns)
         print("s column id ", card.column.id)
         print("s column index ", card.column.index)
         print("card index: ", card.index)
-        card.index = column.index
+                
+        # If card is in a column make sure the index matches
+        if card.index != card.column.index:
+            card.index = card.column.index
+            card.save()
+        
         if data['direction'] == 'decrease':
             if card.index >= len(columns)-1:
                 response.status_code = 400

@@ -154,10 +154,7 @@ const app2 = new Vue({
 		})
 			.then((response) => {
 				this.kanbans = response.data.kanbans_list;
-				this.kanbans.columns = response.data.columns;
-				this.kanbans.cards = response.data.card_list;
-				this.kanbans.columns.cards = response.data.card_list;
-				this.kanban_count = Object.values(response.data).length;
+				this.kanban_count = Object.keys(this.kanbans).length;
 			})
 			.catch((error) => {
 				console.log(BASE_URL);
@@ -233,7 +230,7 @@ const app2 = new Vue({
 				.then((response) => {
 					this.kanbans = response.data.kanban_list;
 					this.kanbans.columns = [];
-					this.kanban_count = Object.values(response.data).length;
+					this.kanban_count = Object.keys(this.kanbans).length;
 					this.kanban_count = this.kanban_count + 1;
 				})
 				.catch((error) => {
@@ -290,7 +287,6 @@ const app2 = new Vue({
 				.then((response) => {
 					//console.log("Column: " + JSON.stringify(response.data.column_list));
 					this.kanbans.columns = response.data.column_list;
-					this.kanbans.columns.cards = response.data.card_list;
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -310,10 +306,8 @@ const app2 = new Vue({
 				.then((response) => {
 					console.log("card created");
 					console.log(JSON.stringify(response.data));
-					this.kanbans.column = response.data.column;
+
 					this.kanbans.columns = response.data.column_list;
-					this.kanbans.columns.cards = response.data.card_list;
-					//app2.$forceUpdate();
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -381,7 +375,7 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					console.log(response.data);
-					this.kanbans = response.data;
+					this.kanbans.columns = response.data.column_list;
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -395,10 +389,7 @@ const app2 = new Vue({
 			})
 				.then((response) => {
 					console.log(response.data);
-
 					this.kanbans.columns = response.data.column_list;
-					this.kanbans.columns.cards = response.data.card_list;
-					//this.kanbans = response.data;
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
