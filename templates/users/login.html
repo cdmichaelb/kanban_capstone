@@ -1,18 +1,27 @@
 {% block content %} {% load static %}
+
 <h1 class="display">Log in</h1>
 
 <form action="{% url 'users:login' %}" method="POST" class="auth-form">
-	<!-- Render error messages if they exist -->
-	{% if error%}
-	<h3 class="error">{{error}}</h3>
-	{% endif%} {% csrf_token %}
-	<label for="username-field">Username</label>
-	<input type="text" name="username" id="login-username-field" />
+	<div class="container">
+		<div class="row">
+			<div class="col-1">
+				{% if error%}
+				<h3 class="error">{{error}}</h3>
+				{% endif%} {% csrf_token %}
+				<label for="username-field">Username</label>
+				<input type="text" name="username" id="login-username-field" />
+			</div>
+			<div class="row">
+				<div class="col-1">
+					<label for="password-field">Password</label>
+					<input type="password" name="password" id="login-password-field" />
 
-	<label for="password-field">Password</label>
-	<input type="password" name="password" id="login-password-field" />
-
-	<button class="loginSubmit" type="submit">Submit</button>
+					<button class="loginSubmit" type="submit">Submit</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </form>
 
 {% endblock content %}

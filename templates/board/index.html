@@ -58,40 +58,43 @@
 				</div>
 			</div>
 		</div>
+		<!-- not used, was conditionally showing the create form below -->
 		<div v-else></div>
-		<div class="create-kanban">
-			<h2>Create a Kanban</h2>
-			<form>
-				<div class="form-group">
-					<label for="kanban-name">Kanban Name</label>
-					<input
-						type="text"
-						class="form-control"
-						id="kanban-name"
-						name="name"
-						placeholder="Kanban Name"
-						v-model="newName"
-					/>
-				</div>
-				<div class="form-group">
-					<label for="kanban-description">Kanban Description</label>
-					<textarea
-						class="form-control"
-						id="kanban-description"
-						name="description"
-						rows="3"
-						v-model="newDescription"
-					></textarea>
-				</div>
-				<button
-					type="submit"
-					class="btn btn-primary"
-					id="create-kanban-button"
-					v-on:click.prevent="createKanban"
-				>
-					Create Kanban
-				</button>
-			</form>
+		<div class="row">
+			<div class="create-kanban col-auto row">
+				<h2>Create a Kanban</h2>
+				<form>
+					<div class="form-group col-sm-12">
+						<label for="kanban-name">Kanban Name</label>
+						<input
+							type="text"
+							class="form-control"
+							id="kanban-name"
+							name="name"
+							placeholder="Kanban Name"
+							v-model="newName"
+						/>
+					</div>
+					<div class="form-group">
+						<label for="kanban-description">Kanban Description</label>
+						<textarea
+							class="form-control"
+							id="kanban-description"
+							name="description"
+							rows="3"
+							v-model="newDescription"
+						></textarea>
+					</div>
+					<button
+						type="submit"
+						class="btn btn-primary"
+						id="create-kanban-button"
+						v-on:click.prevent="createKanban"
+					>
+						Create Kanban
+					</button>
+				</form>
+			</div>
 		</div>
 	</div>
 	<div class="container">
@@ -146,11 +149,11 @@
 			<!-- List columns -->
 			<div class="container">
 				<div v-if="kanbans.columns !== null" class="column-list row">
-					<div v-for="column in kanbans.columns" class="col-auto p-0">
+					<div v-for="column in kanbans.columns" class="col-2 p-1">
 						<div class="card bg-dark text-light border-1 border-light">
 							<div class="row">
 								<div class="col-auto">
-									<h3 class="">[[column.name]] [[column.index]]</h3>
+									<h5 class="">[[column.name]]</h5>
 								</div>
 								<div class="col-auto">
 									<i
@@ -165,10 +168,10 @@
 										<div class="">
 											<div
 												:id="card"
-												class="container bg-light text-dark border-1 border-dark col"
+												class="container bg-light text-dark border-1 border-dark col-auto p-0"
 											>
 												<div :id="card" class="card-header row">
-													<div class="col">
+													<div class="col-1 p-1 container-fluid">
 														<!-- Move Card down to next Column -->
 														<button
 															:id="card"
@@ -178,10 +181,10 @@
 															<i class="fas fa-arrow-left p-0"></i>
 														</button>
 													</div>
-													<div class="col">
-														<h4 :id="card">[[card.name]]</h4>
+													<div class="col-auto text-nowrap">
+														<h6 :id="card">[[card.name]]</h6>
 													</div>
-													<div class="col">
+													<div class="col-1 p-1 container-fluid">
 														<!-- Move Card up to next Column -->
 														<button
 															:id="card"
@@ -192,7 +195,7 @@
 														</button>
 													</div>
 												</div>
-												<div :id="card" class="card-body">
+												<div :id="card" class="card-body row">
 													<p :id="card">
 														[[card.description]]
 														<br />
@@ -200,20 +203,24 @@
 											[[card.updated_at]]. -->
 														<!-- show delete and edit buttons -->
 													</p>
-													<button
-														:id="'delete-' + card.id"
-														class="btn btn-danger"
-														v-on:click.prevent="deleteCard(card.id)"
-													>
-														Delete
-													</button>
-													<button
-														:id="'createrbtn-' + card.id"
-														:idn="card.id"
-														class="btn btn-primary"
-													>
-														Create
-													</button>
+													<div class="col-auto">
+														<button
+															:id="'delete-' + card.id"
+															class="btn-xs btn-danger"
+															v-on:click.prevent="deleteCard(card.id)"
+														>
+															Delete
+														</button>
+													</div>
+													<div class="col-auto">
+														<button
+															:id="'createrbtn-' + card.id"
+															:idn="card.id"
+															class="btn-xs btn-primary"
+														>
+															Create
+														</button>
+													</div>
 												</div>
 											</div>
 										</div>
@@ -250,14 +257,16 @@
 													v-model="newCardDescription"
 												></textarea>
 											</div>
-											<button
-												:id="'createbtn-' + column.id"
-												type="submit"
-												class="btn btn-primary"
-												v-on:click.prevent="createCard(column.id)"
-											>
-												Create Card
-											</button>
+											<div class="col-auto">
+												<button
+													:id="'createbtn-' + column.id"
+													type="submit"
+													class="btn btn-primary clearfield"
+													v-on:click.prevent="createCard(column.id)"
+												>
+													Create Card
+												</button>
+											</div>
 										</form>
 									</div>
 								</div>

@@ -252,7 +252,6 @@ def card_move(request, pk):
         card = qs.first()
         column = Column.objects.filter(pk=card.column.id).first()
         columns = Column.objects.filter(kanban=column.kanban)
-        kanban = Kanban.objects.filter(pk=column.kanban.id).first()
         print(columns)
         print("s column id ", card.column.id)
         print("s column index ", card.column.index)

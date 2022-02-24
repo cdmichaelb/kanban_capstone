@@ -1,4 +1,3 @@
-// Toggle display of id edit-form when edit edit-button is clicked
 let print = console.log; //TODO: Remove later
 $(document).ready(function () {
 	console.log("Loaded");
@@ -35,14 +34,12 @@ $(document).ready(function () {
 		//$("#kanban-list-page").hide("fast");
 		$("#kanban-detail-page").show("fast");
 	});
-
 	$("#kanban-header-delete-icon").click(function (event) {
 		event.stopPropagation();
 		event.preventDefault();
 		console.log("mouseover");
 		$("#kanban-list-page-kanban-button").prop("disabled", true);
 	});
-	// If button with class of create is clicked, show the create form with same id
 	$(".createA").click(function (event) {
 		event.preventDefault();
 		console.log("Create button clicked " + $(this).attr("idn"));
@@ -162,6 +159,13 @@ const app2 = new Vue({
 			});
 	},
 	methods: {
+		backToList: function () {
+			$("#kanban-list-page").show("fast");
+			$("#kanban-detail-page").hide("fast");
+		},
+		submitForm() {
+			this.$refs.anyName.reset();
+		},
 		deleteKanban: function (kanban_id) {
 			axios({
 				method: "DELETE",
@@ -232,6 +236,8 @@ const app2 = new Vue({
 					this.kanbans.columns = [];
 					this.kanban_count = Object.keys(this.kanbans).length;
 					this.kanban_count = this.kanban_count + 1;
+					this.newName = "";
+					this.newDescription = "";
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -285,8 +291,10 @@ const app2 = new Vue({
 				},
 			})
 				.then((response) => {
-					//console.log("Column: " + JSON.stringify(response.data.column_list));
+					console.log("Column: " + JSON.stringify(response.data.column_list));
 					this.kanbans.columns = response.data.column_list;
+					this.newColumnName = "";
+					this.newColumnDescription = "";
 				})
 				.catch((error) => {
 					console.log(BASE_URL);
@@ -308,6 +316,8 @@ const app2 = new Vue({
 					console.log(JSON.stringify(response.data));
 
 					this.kanbans.columns = response.data.column_list;
+					this.newCardName = "";
+					this.newCardDescription = "";
 				})
 				.catch((error) => {
 					console.log(BASE_URL);

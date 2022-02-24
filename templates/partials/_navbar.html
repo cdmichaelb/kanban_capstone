@@ -7,7 +7,12 @@
 		style="display: none"
 	>
 		<div class="container-fluid">
-			<a class="navbar-brand" href="{% url 'board:index' %}">board</a>
+			<a
+				class="navbar-brand"
+				href="{% url 'board:index' %}"
+				v-on:click.stop.prevent="backToList"
+				>board</a
+			>
 
 			<button
 				class="navbar-toggler"
@@ -27,12 +32,13 @@
 							class="nav-link active"
 							aria-current="page"
 							href="{% url 'board:index' %}"
+							v-on:click.stop.prevent="backToList"
 							>Home</a
 						>
 					</li>
 					<li class="nav-item">
 						<a
-							class="nav-link disabled"
+							class="nav-link disabled d-none"
 							href="#"
 							tabindex="-1"
 							aria-disabled="true"
@@ -41,7 +47,7 @@
 					</li>
 					<li class="nav-item">
 						<a
-							class="nav-link disabled"
+							class="nav-link disabled d-none"
 							href="#"
 							tabindex="-1"
 							aria-disabled="true"

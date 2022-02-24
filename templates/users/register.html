@@ -3,22 +3,43 @@
 
 <form action="{% url 'users:register' %}" method="POST" class="auth-form">
 	{% csrf_token %}
-	<label for="first-name-field">First Name</label>
-	<input type="text" name="first-name" id="first-name-field" />
-
-	<label for="last-name-field">Last Name</label>
-	<input type="text" name="last-name" id="last-name-field" />
-
-	<label for="username-field">Username</label>
-	<input type="text" name="username" id="register-username-field" />
-
-	<label for="email-field">Email</label>
-	<input type="email" name="email" id="email-field" />
-
-	<label for="password-field">Password</label>
-	<input type="password" name="password" id="register-password-field" />
-
-	<button class="loginSubmit" type="submit">Submit</button>
+	<div class="container">
+		<div class="row">
+			<label for="first-name-field">First Name</label>
+			<div class="col-1">
+				<input type="text" name="first-name" id="first-name-field" />
+			</div>
+		</div>
+		<div class="row">
+			<label for="last-name-field">Last Name</label>
+			<div class="col-1">
+				<input type="text" name="last-name" id="last-name-field" />
+			</div>
+		</div>
+		<div class="row">
+			<label for="username-field">Username</label>
+			<div class="col-1">
+				<input type="text" name="username" id="register-username-field" />
+			</div>
+		</div>
+		<div class="row">
+			<label for="email-field">Email</label>
+			<div class="col-1">
+				<input type="email" name="email" id="email-field" />
+			</div>
+		</div>
+		<div class="row">
+			<label for="password-field">Password</label>
+			<div class="col-1">
+				<input type="password" name="password" id="register-password-field" />
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-1">
+				<button class="loginSubmit" type="submit">Submit</button>
+			</div>
+		</div>
+	</div>
 </form>
 
 {% endblock content %}

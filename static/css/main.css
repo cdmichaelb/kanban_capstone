@@ -6,9 +6,15 @@
 	visibility: visible;
 } */
 
+/* v-cloak magic */
 [v-cloak] > * {
 	display: none;
 }
 [v-cloak]::before {
 	content: "Loading…";
+}
+
+/* No Text Wrap */
+.nowrap {
+	white-space: nowrap;
 }
