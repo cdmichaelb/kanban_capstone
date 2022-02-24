@@ -106,8 +106,11 @@ def kanban(request):
     response = Response()
     if request.user.id == None:
         
-        response.status_code = 401
-        response.data = {'message': 'User not logged in.'}
+        #response.status_code = 401
+        response.data = {
+            'kanbans_list': KanbanSerializer(Kanban.objects.filter(user=None), many=True).data,
+            'message': 'User not logged in.'
+            }
         return response
     
     response.data = {
