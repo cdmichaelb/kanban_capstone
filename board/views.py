@@ -6,7 +6,6 @@ from .models import *
 from .serializers import *
 # Create your views here.
 
-
 def index(request):
     return render(request, 'board/index.html')
 

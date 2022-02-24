@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-sriydpa6=y6vik-iax5c)u2nv=3_j-wc(^c_ccz4kmpk&tvx$s
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["poopycraft.live", "127.0.0.1"]
+ALLOWED_HOSTS = ["poopycraft.live", "127.0.0.1", "mivnet.onthewifi.com", "mivnet.onthewifi.com:8000"]
 
 
 # Application definition

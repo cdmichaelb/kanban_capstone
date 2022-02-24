@@ -38,7 +38,7 @@ class Card(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
-    index = models.IntegerField(default=0) # redundant
+    index = models.IntegerField(default=0)
     column = models.ForeignKey(Column, on_delete=models.CASCADE, related_name='cards')
     class Meta:
         ordering = ('-created_at',)
